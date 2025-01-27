@@ -2,7 +2,12 @@ import React from 'react'
 import { Route, Routes } from 'react-router-dom'
 import { Header } from '../components/Header'
 import { Sidebar } from '../components/SideBar'
+import { Clientes } from '../containers/Clientes'
+import { Estoque } from '../containers/Estoque'
+import { Pedidos } from '../containers/Pedidos'
 import { Principal } from '../containers/Principal'
+import { Produtos } from '../containers/Produtos'
+
 
 //import paths from '../Constants/paths'
 //import { Admin, Cart, Home, Login, Products, Register } from '../Containers'
@@ -15,6 +20,10 @@ function RoutesApp() {
       <Sidebar />
       <Routes>
         <Route element={<Principal />} path="/inicio" />
+        <Route element={<Produtos />} path="/produtos" />
+        <Route element={<Clientes />} path="/clientes" />
+        <Route element={<Estoque />} path="/estoque" />
+        <Route element={<Pedidos />} path="/pedidos" />
         {/* <Switch> */}
         {/* <Route component={Login} path="/login" /> */}
         {/* <Route component={Register} path="/cadastro" /> */}

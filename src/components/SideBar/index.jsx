@@ -7,13 +7,13 @@ import { useContext } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { UserContext } from '../../hooks/UseContext.jsx';
 import {
-    IconTextWrapper,
-    MenuContainer,
-    SecondContainer,
-    SidebarContainer,
-    TextIcon,
-    WelcomeText,
-    WelcomeWrapper
+  IconTextWrapper,
+  MenuContainer,
+  SecondContainer,
+  SidebarContainer,
+  TextIcon,
+  WelcomeText,
+  WelcomeWrapper
 } from './style';
 
 
@@ -45,8 +45,8 @@ export const Sidebar = () => {
           <IconTextWrapper className="pt-5">
             <AutoAwesomeMosaicSharpIcon />
             <TextIcon
-              onClick={() => handleRedirect('/AdminAgendamento')}
-              isActive={isActive('/AdminAgendamento')}
+              onClick={() => handleRedirect('/Produtos')}
+              isActive={isActive('/Produtos')}
             >
               Produtos
             </TextIcon>
@@ -55,8 +55,8 @@ export const Sidebar = () => {
           <IconTextWrapper>
             <AccountBoxSharpIcon />
             <TextIcon
-              onClick={() => handleRedirect('/AdminClientes')}
-              isActive={isActive('/AdminClientes')}
+              onClick={() => handleRedirect('/Clientes')}
+              isActive={isActive('/Clientes')}
             >
               Clientes
             </TextIcon>
@@ -65,8 +65,8 @@ export const Sidebar = () => {
           <IconTextWrapper>
             <InventorySharpIcon />
             <TextIcon
-              onClick={() => handleRedirect('/AdminQuadras')}
-              isActive={isActive('/AdminQuadras')}
+              onClick={() => handleRedirect('/Estoque')}
+              isActive={isActive('/Estoque')}
             >
               Estoque
             </TextIcon>
@@ -75,8 +75,8 @@ export const Sidebar = () => {
           <IconTextWrapper>
             <AppRegistrationSharpIcon />
             <TextIcon
-              onClick={() => handleRedirect('/AdminHorarios')}
-              isActive={isActive('/AdminHorarios')}
+              onClick={() => handleRedirect('/Pedidos')}
+              isActive={isActive('/Pedidos')}
             >
               Pedidos
             </TextIcon>
