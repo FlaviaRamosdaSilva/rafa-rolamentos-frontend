@@ -1,51 +1,42 @@
-import React from 'react'
-import { Route, Routes } from 'react-router-dom'
-import { Header } from '../components/Header'
-import { Sidebar } from '../components/SideBar'
-import { Clientes } from '../containers/Clientes'
-import { Estoque } from '../containers/Estoque'
-import { Pedidos } from '../containers/Pedidos'
-import { Principal } from '../containers/Principal'
-import { Produtos } from '../containers/Produtos'
+import React from 'react';
+import { Route, Routes, useLocation } from 'react-router-dom';
+import { Footer } from '../components/Footer';
+import { Header } from '../components/Header';
+import { Sidebar } from '../components/SideBar';
+import { Clientes } from '../containers/Clientes';
 
-
-//import paths from '../Constants/paths'
-//import { Admin, Cart, Home, Login, Products, Register } from '../Containers'
-//mport PrivateRoute from './private-route'
+import { Compras } from '../containers/Compras/index.jsx';
+import { Estoque } from '../containers/Estoque';
+import { Principal } from '../containers/Principal';
+import { Produtos } from '../containers/Produtos';
+import { Login } from '../containers/Register';
+import { Vendas } from '../containers/Vendas';
+import { UserProvider } from '../hooks/UseContext.jsx';
 
 function RoutesApp() {
+  const location = useLocation(); // Obtém a rota atual
+
+  // Define se o header e o sidebar devem ser exibidos
+  const shouldShowHeaderAndSidebar = location.pathname !== '/login';
+
   return (
     <>
-      <Header />
-      <Sidebar />
+    <UserProvider>
+      {shouldShowHeaderAndSidebar && <Header />}
+      {shouldShowHeaderAndSidebar && <Sidebar />}
       <Routes>
-        <Route element={<Principal />} path="/inicio" />
+        <Route element={<Login />} path="/login" />
+        <Route element={<Principal />} path="/" />
         <Route element={<Produtos />} path="/produtos" />
         <Route element={<Clientes />} path="/clientes" />
         <Route element={<Estoque />} path="/estoque" />
-        <Route element={<Pedidos />} path="/pedidos" />
-        {/* <Switch> */}
-        {/* <Route component={Login} path="/login" /> */}
-        {/* <Route component={Register} path="/cadastro" /> */}
-        {/* <PrivateRoute exact component={Home} path="/" /> */}
-        {/* <PrivateRoute component={Products} path="/produtos" /> */}
-        {/* <PrivateRoute component={Cart} path="/carrinho" /> */}
-        {/*<PrivateRoute component={Admin} path={paths.Order} isAdmin={true} />
-          <PrivateRoute component={Admin} path={paths.Products} isAdmin={true} />
-          <PrivateRoute
-            component={Admin}
-            path={paths.NewProduct}
-            isAdmin={true}
-          />
-          <PrivateRoute
-            component={Admin}
-            path={paths.EditProduct}
-            isAdmin={true}
-          />
-        </Switch>*/}
+        <Route element={<Vendas />} path="/vendas" />
+        <Route element={<Compras />} path="/compras" />
       </Routes>
+      {shouldShowHeaderAndSidebar && <Footer />}
+      </UserProvider>
     </>
-  )
+  );
 }
 
-export default RoutesApp
+export default RoutesApp;

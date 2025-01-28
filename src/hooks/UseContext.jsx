@@ -12,6 +12,7 @@ export const UserProvider = ({ children }) => {
     const putUserData = async (UserInfo) => {
       // vamos usar as informações e colocar dentro o Local Storage
       // responsável por pegar meus dados e colocar dentro do Estado
+      console.log('Dados recebidos no putUserData:', UserInfo); // Verifica os dados recebidos
       setUserData(UserInfo);
   
       await localStorage.setItem('rafaRolamentos:userData', JSON.stringify(UserInfo));

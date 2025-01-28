@@ -2,7 +2,7 @@ import axios from 'axios'
 // conforme documentação do axios
 
 const apiRafaRolamentos = axios.create({
-  baseURL: '' // endereço do backend => FALTA ADICIONAR
+  baseURL: process.env.REACT_APP_API_URL // endereço do backend => FALTA ADICIONAR
 })
 
 apiRafaRolamentos.interceptors.request.use(async config => {

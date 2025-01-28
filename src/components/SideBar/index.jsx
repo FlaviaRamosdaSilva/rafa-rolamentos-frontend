@@ -1,11 +1,12 @@
-import AccountBoxSharpIcon from '@mui/icons-material/AccountBoxSharp';
-import AppRegistrationSharpIcon from '@mui/icons-material/AppRegistrationSharp';
-import AutoAwesomeMosaicSharpIcon from '@mui/icons-material/AutoAwesomeMosaicSharp';
-import InventorySharpIcon from '@mui/icons-material/InventorySharp';
-import LogoutSharpIcon from '@mui/icons-material/LogoutSharp';
-import { useContext } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
-import { UserContext } from '../../hooks/UseContext.jsx';
+import AccountBoxSharpIcon from '@mui/icons-material/AccountBoxSharp'
+import AppRegistrationSharpIcon from '@mui/icons-material/AppRegistrationSharp'
+import AutoAwesomeMosaicSharpIcon from '@mui/icons-material/AutoAwesomeMosaicSharp'
+import InventorySharpIcon from '@mui/icons-material/InventorySharp'
+import LogoutSharpIcon from '@mui/icons-material/LogoutSharp'
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart'
+import { useContext } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom'
+import { UserContext } from '../../hooks/UseContext.jsx'
 import {
   IconTextWrapper,
   MenuContainer,
@@ -13,52 +14,51 @@ import {
   SidebarContainer,
   TextIcon,
   WelcomeText,
-  WelcomeWrapper
-} from './style';
-
+  WelcomeWrapper,
+} from './style'
 
 export const Sidebar = () => {
-  const { logout } = useContext(UserContext);
+  const { logout } = useContext(UserContext)
 
-  const navigate = useNavigate();
-  const location = useLocation();
+  const navigate = useNavigate()
+  const location = useLocation()
 
   const handleRedirect = (route) => {
-    navigate(route); // Redireciona para a rota específica
-  };
+    navigate(route) // Redireciona para a rota específica
+  }
 
   const handleLogout = () => {
-    logout(); // Chama a função de logout
-    navigate('/login'); // Redireciona para a tela de registro
-  };
+    logout() // Chama a função de logout
+    navigate('/login') // Redireciona para a tela de registro
+  }
 
-  const isActive = (path) => location.pathname === path;
+  const isActive = (path) => location.pathname === path
 
   return (
     <SidebarContainer>
       <WelcomeWrapper>
-        <WelcomeText>Bem Vindo de volta</WelcomeText>
+        <WelcomeText></WelcomeText>
       </WelcomeWrapper>
 
       <MenuContainer>
         <SecondContainer>
           <IconTextWrapper className="pt-5">
+            <ShoppingCartIcon />
+            <TextIcon
+              onClick={() => handleRedirect('/Compras')}
+              isActive={isActive('/Compras')}
+            >
+              Compras
+            </TextIcon>
+          </IconTextWrapper>
+
+          <IconTextWrapper>
             <AutoAwesomeMosaicSharpIcon />
             <TextIcon
               onClick={() => handleRedirect('/Produtos')}
               isActive={isActive('/Produtos')}
             >
               Produtos
-            </TextIcon>
-          </IconTextWrapper>
-
-          <IconTextWrapper>
-            <AccountBoxSharpIcon />
-            <TextIcon
-              onClick={() => handleRedirect('/Clientes')}
-              isActive={isActive('/Clientes')}
-            >
-              Clientes
             </TextIcon>
           </IconTextWrapper>
 
@@ -73,15 +73,25 @@ export const Sidebar = () => {
           </IconTextWrapper>
 
           <IconTextWrapper>
-            <AppRegistrationSharpIcon />
+            <AccountBoxSharpIcon />
             <TextIcon
-              onClick={() => handleRedirect('/Pedidos')}
-              isActive={isActive('/Pedidos')}
+              onClick={() => handleRedirect('/Clientes')}
+              isActive={isActive('/Clientes')}
             >
-              Pedidos
+              Clientes
             </TextIcon>
           </IconTextWrapper>
-          
+
+          <IconTextWrapper>
+            <AppRegistrationSharpIcon />
+            <TextIcon
+              onClick={() => handleRedirect('/Vendas')}
+              isActive={isActive('/Vendas')}
+            >
+              Vendas
+            </TextIcon>
+          </IconTextWrapper>
+
           <IconTextWrapper onClick={handleLogout}>
             <LogoutSharpIcon />
             <TextIcon>Logout</TextIcon>
@@ -89,5 +99,5 @@ export const Sidebar = () => {
         </SecondContainer>
       </MenuContainer>
     </SidebarContainer>
-  );
-};
+  )
+}

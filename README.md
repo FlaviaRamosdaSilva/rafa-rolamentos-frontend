@@ -5,6 +5,7 @@ Axios
 CORS
 MUI ICONS
 Styled Components
+Toastify
 
 
 ## Available Scripts

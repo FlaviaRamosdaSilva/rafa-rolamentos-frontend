@@ -1,16 +1,34 @@
-import styled from 'styled-components'
+import { Button, TextField } from '@mui/material';
+import styled from 'styled-components';
 
 export const Container = styled.div`
-  background-color: #898889;   
+  padding: 20px;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   align-items: center;
-  height: calc(100vh - 130px);
-  width: calc(100vw - 280px);  // Subtraindo a largura do sidebar (280px)
-  margin-left: 280px;  // Adicionando margem igual à largura do sidebar
-`
+  background-color: #898889;
+  min-height: 100vh;
+`;
 
-export const LogoImage = styled.img`
-  max-width: 80%;  // Garante que a imagem não fique maior que o container
-  height: auto;  // Mantém a proporção da imagem
-`
+export const ActionContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  max-width: 800px;
+  margin-bottom: 20px;
+`;
+
+export const StyledButton = styled(Button)`
+  background-color: #949caf !important;
+  color: #3c3d62 !important;
+  font-weight: bold !important;
+  &:hover {
+    background-color: #7c88a1 !important;
+  }
+`;
+
+export const StyledTextField = styled(TextField)`
+  flex: 1;
+  margin-right: 20px !important;
+`;
