@@ -1,16 +1,86 @@
+import { Button, Paper, TextField } from '@mui/material'
 import styled from 'styled-components'
 
-export const Container = styled.div`
-  background-color: #898889;   
+export const ContainerMe = styled.div`
   display: flex;
   justify-content: center;
-  align-items: center;
-  height: calc(100vh - 130px);
-  width: calc(100vw - 280px);  // Subtraindo a largura do sidebar (280px)
-  margin-left: 280px;  // Adicionando margem igual à largura do sidebar
+  //align-items: center;
+  min-height: calc(100vh - 130px);
+  width: calc(100vw - 280px); /* Subtraindo a largura do sidebar (280px) */
+  background-color: #f4f4f4;
+  padding: 20px;
+  margin-left: 280px;
 `
 
-export const LogoImage = styled.img`
-  max-width: 80%;  // Garante que a imagem não fique maior que o container
-  height: auto;  // Mantém a proporção da imagem
+export const FormPaper = styled(Paper)`
+  padding: 32px;
+  width: 100%;
+  max-width: 800px; /* Aumentamos a largura para acomodar duas colunas */
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  background-color: #fff;
+  height: 100%;
+  height: 550px;
+  margin-top: 80px;
+`
+
+export const FormTitle = styled.h1`
+  font-size: 24px;
+  font-weight: bold;
+  text-align: center;
+  color: #3c3d62;
+  margin-bottom: 20px;
+`
+
+export const FormContainer = styled.div`
+  display: flex;
+  flex-wrap: wrap; /* Permite que os campos se organizem automaticamente */
+  gap: 16px; /* Espaçamento entre os campos */
+`
+
+export const FieldContainer = styled.div`
+  flex: 1 1 calc(50% - 16px); /* Ocupa 50% da largura, considerando o gap */
+  min-width: 300px; /* Largura mínima para responsividade */
+`
+
+export const StyledTextField = styled(TextField)`
+  width: 100%; /* Faz os campos ocuparem toda a largura do container */
+  & .MuiInputLabel-root {
+    color: #949caf !important;
+  }
+  & .MuiOutlinedInput-root {
+    & fieldset {
+      border-color: #949caf !important;
+    }
+    &:hover fieldset {
+      border-color: #7c88a1 !important;
+    }
+    &.Mui-focused fieldset {
+      border-color: #3c3d62 !important;
+    }
+  }
+`
+
+export const StyledButton = styled(Button)`
+  background-color: #949caf !important;
+  color: #fff !important;
+  font-weight: bold !important;
+  margin-top: 20px !important;
+  &:hover {
+    background-color: #7c88a1 !important;
+  }
+`
+
+export const ErrorMessage = styled.p`
+  color: #f44336;
+  font-size: 14px;
+  margin: -10px 0 10px 0;
+  text-align: left;
+`
+
+export const SuccessMessage = styled.p`
+  color: #4caf50;
+  font-size: 14px;
+  margin: -10px 0 10px 0;
+  text-align: left;
 `
