@@ -32,7 +32,7 @@ export const Sidebar = () => {
     navigate('/login') // Redireciona para a tela de registro
   }
 
-  const isActive = (path) => location.pathname === path
+  const isActive = (path) => location.pathname.startsWith(path)
 
   return (
     <SidebarContainer>
@@ -58,7 +58,7 @@ export const Sidebar = () => {
               onClick={() => handleRedirect('/Produtos')}
               isActive={isActive('/Produtos')}
             >
-              Produtos
+              Criar Produto
             </TextIcon>
           </IconTextWrapper>
 
@@ -66,7 +66,7 @@ export const Sidebar = () => {
             <InventorySharpIcon />
             <TextIcon
               onClick={() => handleRedirect('/Estoque')}
-              isActive={isActive('/Estoque')}
+              isActive={isActive('/Estoque') || isActive('/editar-produto')}
             >
               Estoque
             </TextIcon>

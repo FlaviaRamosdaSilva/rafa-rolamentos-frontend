@@ -15,12 +15,11 @@ import { toast } from 'react-toastify'
 import * as Yup from 'yup'
 import apiRafaRolamentos from '../../service/api'
 
-
 export function EditarProduto() {
   const { id } = useParams()
   const [tabIndex, setTabIndex] = useState(0)
   const navigate = useNavigate()
-  const [selectedProduto, setSelectedProduto] = useState(null);
+  const [selectedProduto, setSelectedProduto] = useState(null)
 
   // Esquema de validação com Yup
   const editarProdutoSchema = Yup.object().shape({
@@ -71,28 +70,28 @@ export function EditarProduto() {
   })
 
   // Sincronizar os valores do formulário com os inputs
-const valoresForm = watch();
+  const valoresForm = watch()
 
   // Buscar produto pelo ID e popular o formulário
   useEffect(() => {
     const fetchProduto = async () => {
       try {
-        const response = await apiRafaRolamentos.get(`/produto/${id}`);
-        console.log('Produto carregado:', response.data);
-        setSelectedProduto(response.data);
+        const response = await apiRafaRolamentos.get(`/produto/${id}`)
+        console.log('Produto carregado:', response.data)
+        setSelectedProduto(response.data)
 
         Object.keys(response.data).forEach((key) => {
-        setValue(key, response.data[key]); //
-        // Atualiza os valores do formulário corretamente
-        });
+          setValue(key, response.data[key]) //
+          // Atualiza os valores do formulário corretamente
+        })
       } catch (err) {
-        toast.error('Erro ao carregar produto');
-        navigate('/estoque');
+        toast.error('Erro ao carregar produto')
+        navigate('/estoque')
       }
-    };
-  
-    fetchProduto();
-  }, [id, navigate, setValue]);
+    }
+
+    fetchProduto()
+  }, [id, navigate, setValue])
 
   // Envio do formulário
   const onSubmit = async (data) => {
@@ -107,10 +106,13 @@ const valoresForm = watch();
           preco_distribuidor: data.preco_distribuidor,
         })
       } else if (tabIndex === 1) {
-        await apiRafaRolamentos.put(`/produto/estoque/${selectedProduto.id_produto}`, {
-          quantidade_total: data.quantidade_total,
-          quantidade_minima: data.quantidade_minima,
-        })
+        await apiRafaRolamentos.put(
+          `/produto/estoque/${selectedProduto.id_produto}`,
+          {
+            quantidade_total: data.quantidade_total,
+            quantidade_minima: data.quantidade_minima,
+          }
+        )
       }
 
       toast.success('Produto atualizado com sucesso!')
@@ -120,14 +122,22 @@ const valoresForm = watch();
     }
   }
 
+  const handleGoToEstoque = () => {
+    navigate('/Estoque')
+  }
+
   return (
     <Box sx={{ maxWidth: 800, margin: '0 auto', mt: 4 }}>
       <Paper elevation={3} sx={{ p: 4 }}>
         <Typography variant="h5" gutterBottom>
-          Editar Produto: {selectedProduto?.descricao_produto || 'Carregando...'}
+          Editar Produto:{' '}
+          {selectedProduto?.descricao_produto || 'Carregando...'}
         </Typography>
 
-        <Tabs value={tabIndex} onChange={(_, newValue) => setTabIndex(newValue)}>
+        <Tabs
+          value={tabIndex}
+          onChange={(_, newValue) => setTabIndex(newValue)}
+        >
           <Tab label="Dados do Produto" />
           <Tab label="Estoque" />
           <Tab label="Histórico" disabled />
@@ -201,6 +211,19 @@ const valoresForm = watch();
               >
                 Salvar Alterações
               </Button>
+              <Button
+                onClick={handleGoToEstoque}
+                variant="contained"
+                color="primary"
+                sx={{
+                  mt: 2,
+                  display: 'flex',
+                  justifyContent: 'flex-end',
+                  gap: 2,
+                }}
+              >
+                Voltar
+              </Button>
             </Box>
           )}
 
@@ -233,6 +256,19 @@ const valoresForm = watch();
                 sx={{ mt: 2 }}
               >
                 Atualizar Estoque
+              </Button>
+              <Button
+                onClick={handleGoToEstoque}
+                variant="contained"
+                color="primary"
+                sx={{
+                  mt: 2,
+                  display: 'flex',
+                  justifyContent: 'flex-end',
+                  gap: 2,
+                }}
+              >
+                Voltar
               </Button>
             </Box>
           )}

@@ -1,6 +1,5 @@
-import { Edit as EditIcon } from '@mui/icons-material';
+import { Edit as EditIcon } from '@mui/icons-material'
 import {
-  Box,
   Button,
   Modal,
   Paper,
@@ -12,94 +11,110 @@ import {
   TableRow,
   TextField,
   Typography,
-} from '@mui/material';
-import React, { useEffect, useState } from 'react';
-import apiRafaRolamentos from '../../service/api';
-import { ActionContainer, Container, StyledButton, StyledTextField } from './style';
+} from '@mui/material'
+import React, { useEffect, useState } from 'react'
+import { toast } from 'react-toastify'
+import apiRafaRolamentos from '../../service/api'
+import {
+  ActionContainer,
+  Container,
+  ModalContainer,
+  StyledButton,
+  StyledTextField,
+} from './style'
 
 export function Clientes() {
-  const [clientes, setClientes] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [ , setError] = useState(null);
-  const [search, setSearch] = useState('');
-  const [modalOpen, setModalOpen] = useState(false);
-  const [modalCreateOpen, setModalCreateOpen] = useState(false); // Modal para criar cliente
-  const [newCliente, setNewCliente] = useState({ nome: '', email: '', telefone: '' }); // Estado para novo cliente
-  const [selectedCliente, setSelectedCliente] = useState(null);
+  const [clientes, setClientes] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [, setError] = useState(null)
+  const [search, setSearch] = useState('')
+  const [modalOpen, setModalOpen] = useState(false)
+  const [modalCreateOpen, setModalCreateOpen] = useState(false) // Modal para criar cliente
+  const [newCliente, setNewCliente] = useState({
+    nome: '',
+    email: '',
+    telefone: '',
+  }) // Estado para novo cliente
+  const [selectedCliente, setSelectedCliente] = useState(null)
 
   const fetchClientes = async () => {
     try {
-      const response = await apiRafaRolamentos.get('/cliente');
-      setClientes(response.data);
-      setLoading(false);
+      const response = await apiRafaRolamentos.get('/cliente')
+      setClientes(response.data)
+      setLoading(false)
     } catch (err) {
-      setError('Erro ao buscar clientes');
-      setLoading(false);
+      setError('Erro ao buscar clientes')
+      toast.error('Erro ao buscar clientes:', err)
+      setLoading(false)
     }
-  };
+  }
 
-  const handleSearch = (e) => setSearch(e.target.value);
+  const handleSearch = (e) => setSearch(e.target.value)
 
   const handleEdit = async (id) => {
     try {
-      const response = await apiRafaRolamentos.get(`/cliente/${id}`);
-      setSelectedCliente(response.data);
-      setModalOpen(true);
+      const response = await apiRafaRolamentos.get(`/cliente/${id}`)
+      setSelectedCliente(response.data)
+      setModalOpen(true)
     } catch (err) {
-      console.error('Erro ao buscar cliente:', err);
+      console.error('Erro ao buscar cliente:', err)
+      toast.error('Erro ao buscar cliente:', err)
     }
-  };
+  }
 
   const handleUpdate = async (e) => {
-    e.preventDefault();
+    e.preventDefault()
     try {
       await apiRafaRolamentos.put(`/cliente/${selectedCliente.id_cliente}`, {
         nome: selectedCliente.nome,
         email: selectedCliente.email,
         telefone: selectedCliente.telefone,
-      });
-
-      fetchClientes(); // Atualiza a lista de clientes
-      setModalOpen(false); // Fecha o modal
+      })
+      toast.success('Cliente criado com sucesso')
+      fetchClientes() // Atualiza a lista de clientes
+      setModalOpen(false) // Fecha o modal
     } catch (err) {
-      console.error('Erro ao atualizar cliente:', err);
+      console.error('Erro ao atualizar cliente:', err)
+      toast.error('Erro ao atualizar cliente', err)
     }
-  };
+  }
 
   const handleCreate = async (e) => {
-    e.preventDefault();
-  
+    e.preventDefault()
+
     try {
       // Pega o userId do localStorage
-      const userData = localStorage.getItem('rafaRolamentos:userData');
-      const userId = userData && JSON.parse(userData).id; // Ajuste conforme a estrutura do seu localStorage
-  
+      const userData = localStorage.getItem('rafaRolamentos:userData')
+      const userId = userData && JSON.parse(userData).id // Ajuste conforme a estrutura do seu localStorage
+
       if (!userId) {
-        console.error('Erro: userId não encontrado no localStorage');
-        return;
+        console.error('Erro: userId não encontrado no localStorage')
+        toast.error('Erro: userId não encontrado no localStorage')
+        return
       }
-  
+
       // Faz a requisição POST com userId
-      await apiRafaRolamentos.post('/cliente', { ...newCliente, userId });
-  
-      console.log('Cliente criado com sucesso');
-      fetchClientes(); // Atualiza a lista de clientes
-      setModalCreateOpen(false); // Fecha o modal de criação
-      setNewCliente({ nome: '', email: '', telefone: '' }); // Limpa o estado
+      await apiRafaRolamentos.post('/cliente', { ...newCliente, userId })
+      toast.success('Cliente criado com sucesso')
+      console.log('Cliente criado com sucesso')
+      fetchClientes() // Atualiza a lista de clientes
+      setModalCreateOpen(false) // Fecha o modal de criação
+      setNewCliente({ nome: '', email: '', telefone: '' }) // Limpa o estado
     } catch (err) {
-      console.error('Erro ao criar cliente:', err);
+      console.error('Erro ao criar cliente:', err)
+      toast.error('Erro ao criar cliente:', err)
     }
   }
 
   useEffect(() => {
-    fetchClientes();
-  }, []);
+    fetchClientes()
+  }, [])
 
   const filteredClientes = clientes
     .filter((cliente) =>
       cliente.nome.toLowerCase().includes(search.toLowerCase())
     )
-    .sort((a, b) => a.nome.localeCompare(b.nome)); // Ordena a lista por nome
+    .sort((a, b) => a.nome.localeCompare(b.nome)) // Ordena a lista por nome
 
   return (
     <Container>
@@ -125,11 +140,13 @@ export function Clientes() {
           Carregando...
         </Typography>
       ) : (
-        <TableContainer component={Paper} style={{ maxWidth: '800px', margin: '0 auto' }}>
+        <TableContainer
+          component={Paper}
+          style={{ maxWidth: '800px', margin: '0 auto' }}
+        >
           <Table>
             <TableHead>
               <TableRow>
-              
                 <TableCell>Nome</TableCell>
                 <TableCell>Email</TableCell>
                 <TableCell>Telefone</TableCell>
@@ -139,7 +156,6 @@ export function Clientes() {
             <TableBody>
               {filteredClientes.map((cliente) => (
                 <TableRow key={cliente.id_cliente}>
-                
                   <TableCell>{cliente.nome}</TableCell>
                   <TableCell>{cliente.email}</TableCell>
                   <TableCell>{cliente.telefone}</TableCell>
@@ -157,20 +173,7 @@ export function Clientes() {
 
       {/* Modal para Editar Cliente */}
       <Modal open={modalOpen} onClose={() => setModalOpen(false)}>
-        <Box
-          sx={{
-            position: 'absolute',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
-            bgcolor: 'white',
-            boxShadow: 24,
-            p: 4,
-            borderRadius: 2,
-            maxWidth: '400px',
-            width: '100%',
-          }}
-        >
+        <ModalContainer>
           <Typography variant="h6" gutterBottom>
             Editar Cliente
           </Typography>
@@ -182,7 +185,10 @@ export function Clientes() {
                 fullWidth
                 margin="normal"
                 onChange={(e) =>
-                  setSelectedCliente({ ...selectedCliente, nome: e.target.value })
+                  setSelectedCliente({
+                    ...selectedCliente,
+                    nome: e.target.value,
+                  })
                 }
               />
               <TextField
@@ -191,7 +197,10 @@ export function Clientes() {
                 fullWidth
                 margin="normal"
                 onChange={(e) =>
-                  setSelectedCliente({ ...selectedCliente, email: e.target.value })
+                  setSelectedCliente({
+                    ...selectedCliente,
+                    email: e.target.value,
+                  })
                 }
               />
               <TextField
@@ -200,7 +209,10 @@ export function Clientes() {
                 fullWidth
                 margin="normal"
                 onChange={(e) =>
-                  setSelectedCliente({ ...selectedCliente, telefone: e.target.value })
+                  setSelectedCliente({
+                    ...selectedCliente,
+                    telefone: e.target.value,
+                  })
                 }
               />
               <Button
@@ -213,25 +225,12 @@ export function Clientes() {
               </Button>
             </form>
           )}
-        </Box>
+        </ModalContainer>
       </Modal>
 
       {/* Modal para Criar Cliente */}
       <Modal open={modalCreateOpen} onClose={() => setModalCreateOpen(false)}>
-        <Box
-          sx={{
-            position: 'absolute',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
-            bgcolor: 'white',
-            boxShadow: 24,
-            p: 4,
-            borderRadius: 2,
-            maxWidth: '400px',
-            width: '100%',
-          }}
-        >
+        <ModalContainer>
           <Typography variant="h6" gutterBottom>
             Criar Cliente
           </Typography>
@@ -272,8 +271,8 @@ export function Clientes() {
               Salvar
             </Button>
           </form>
-        </Box>
+        </ModalContainer>
       </Modal>
     </Container>
-  );
+  )
 }
