@@ -1,9 +1,11 @@
 import { yupResolver } from '@hookform/resolvers/yup'
 import React from 'react'
 import { useForm } from 'react-hook-form'
+import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import * as Yup from 'yup'
 import apiRafaRolamentos from '../../service/api'
+
 import {
   ContainerMe,
   FieldContainer,
@@ -45,17 +47,35 @@ export function Produtos() {
   // Configuração do React Hook Form com Yup
   const {
     register,
+    reset,
     handleSubmit,
     formState: { errors },
   } = useForm({
     resolver: yupResolver(produtoSchema),
   })
 
+  const navigate = useNavigate();
+
   // Função de submissão do formulário
   const onSubmit = async (data) => {
     try {
-      await apiRafaRolamentos.post('/produto', data)
+
+      // Pega o userId do localStorage// Pega o userId do localStorage
+      const userData = localStorage.getItem('rafaRolamentos:userData');
+      const userId = userData && JSON.parse(userData).id; // Ajuste conforme a estrutura do seu localStorage
+  
+      if (!userId) {
+        console.error('Erro: userId não encontrado no localStorage');
+        return;
+      }
+
+      await apiRafaRolamentos.post('/produto', { ...data, userId })
       toast.success('Produto criado com sucesso!')
+
+      reset();
+
+      setTimeout(() => navigate('/estoque'), 1000);
+
     } catch (err) {
       console.error('Erro ao criar produto:', err)
       toast.error('Erro ao criar produto. Verifique os campos.')

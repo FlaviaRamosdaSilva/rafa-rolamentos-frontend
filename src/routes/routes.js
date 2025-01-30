@@ -6,11 +6,12 @@ import { Sidebar } from '../components/SideBar';
 import { Clientes } from '../containers/Clientes';
 
 import { Compras } from '../containers/Compras/index.jsx';
+import { EditarProduto } from '../containers/EditarProduto/index.jsx';
 import { Estoque } from '../containers/Estoque';
 import { Principal } from '../containers/Principal';
 import { Produtos } from '../containers/Produtos';
 import { Login } from '../containers/Register';
-import { Vendas } from '../containers/Vendas';
+import { Vendas } from '../containers/Vendas/index.jsx';
 import { UserProvider } from '../hooks/UseContext.jsx';
 
 function RoutesApp() {
@@ -32,6 +33,7 @@ function RoutesApp() {
         <Route element={<Estoque />} path="/estoque" />
         <Route element={<Vendas />} path="/vendas" />
         <Route element={<Compras />} path="/compras" />
+        <Route element={<EditarProduto />} path="/editar-produto/:id" />
       </Routes>
       {shouldShowHeaderAndSidebar && <Footer />}
       </UserProvider>

@@ -10,25 +10,18 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  TextField,
   Typography,
 } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import apiRafaRolamentos from '../../service/api'
-import {
-  ActionContainer,
-  Container,
-  StyledButton,
-  StyledTextField,
-} from './style'
+import { ActionContainer, Container, StyledButton, StyledTextField } from './style'
 
 export function Estoque() {
   const [produtos, setProdutos] = useState([])
   const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState('')
-  const [modalOpen, setModalOpen] = useState(false)
   const [modalDeleteOpen, setModalDeleteOpen] = useState(false)
   const [selectedProduto, setSelectedProduto] = useState(null)
 
@@ -47,32 +40,9 @@ export function Estoque() {
 
   const handleSearch = (e) => setSearch(e.target.value)
 
-  const handleEdit = async (id_produto) => {
-    try {
-      const response = await apiRafaRolamentos.get(`/produto/${id_produto}`)
-      setSelectedProduto(response.data)
-      setModalOpen(true)
-    } catch (err) {
-      toast.error('Erro ao buscar produto')
-    }
-  }
-
-  const handleUpdate = async (e) => {
-    e.preventDefault()
-    try {
-      await apiRafaRolamentos.put(`/produto/${selectedProduto.id_produto}`, {
-        codigo_produto: selectedProduto.codigo_produto,
-        descricao_produto: selectedProduto.descricao_produto,
-        fabricante: selectedProduto.fabricante,
-        quantidade_total: selectedProduto.quantidade_total,
-        quantidade_minima: selectedProduto.quantidade_minima,
-      })
-      toast.success('Produto atualizado com sucesso')
-      fetchProdutos()
-      setModalOpen(false)
-    } catch (err) {
-      toast.error('Erro ao atualizar produto')
-    }
+  // Redirecionar para a página de edição do produto
+  const handleEdit = (id_produto) => {
+    navigate(`/editar-produto/${id_produto}`)
   }
 
   const handleDelete = async () => {
@@ -117,10 +87,7 @@ export function Estoque() {
           Carregando...
         </Typography>
       ) : (
-        <TableContainer
-          component={Paper}
-          style={{ maxWidth: '1000px', margin: '0 auto' }}
-        >
+        <TableContainer component={Paper} style={{ maxWidth: '1000px', margin: '0 auto' }}>
           <Table>
             <TableHead>
               <TableRow>
@@ -160,90 +127,8 @@ export function Estoque() {
         </TableContainer>
       )}
 
-      {/* Modal para Editar Produto */}
-      <Modal open={modalOpen} onClose={() => setModalOpen(false)}>
-        <Box
-          sx={{
-            position: 'absolute',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
-            bgcolor: 'white',
-            boxShadow: 24,
-            p: 4,
-            borderRadius: 2,
-            maxWidth: '400px',
-            width: '100%',
-          }}
-        >
-          <Typography variant="h6" gutterBottom>
-            Editar Produto
-          </Typography>
-          {selectedProduto && (
-            <form onSubmit={handleUpdate}>
-              <TextField
-                label="Descrição"
-                defaultValue={selectedProduto.descricao_produto}
-                fullWidth
-                margin="normal"
-                onChange={(e) =>
-                  setSelectedProduto({
-                    ...selectedProduto,
-                    descricao_produto: e.target.value,
-                  })
-                }
-              />
-              <TextField
-                label="Fabricante"
-                defaultValue={selectedProduto.fabricante}
-                fullWidth
-                margin="normal"
-                onChange={(e) =>
-                  setSelectedProduto({
-                    ...selectedProduto,
-                    fabricante: e.target.value,
-                  })
-                }
-              />
-              <TextField
-                label="Quantidade Total"
-                defaultValue={selectedProduto.quantidade_total}
-                fullWidth
-                margin="normal"
-                onChange={(e) =>
-                  setSelectedProduto({
-                    ...selectedProduto,
-                    quantidade_total: e.target.value,
-                  })
-                }
-              />
-              <TextField
-                label="Quantidade Mínima"
-                defaultValue={selectedProduto.quantidade_minima}
-                fullWidth
-                margin="normal"
-                onChange={(e) =>
-                  setSelectedProduto({
-                    ...selectedProduto,
-                    quantidade_minima: e.target.value,
-                  })
-                }
-              />
-              <Button
-                type="submit"
-                variant="contained"
-                color="primary"
-                style={{ marginTop: '10px' }}
-              >
-                Salvar Alterações
-              </Button>
-            </form>
-          )}
-        </Box>
-      </Modal>
-
-      {/* Modal para Confirmar Exclusão */}
-      <Modal open={modalDeleteOpen} onClose={() => setModalDeleteOpen(false)}>
+       {/* Modal para Confirmar Exclusão */}
+       <Modal open={modalDeleteOpen} onClose={() => setModalDeleteOpen(false)}>
         <Box
           sx={{
             position: 'absolute',
