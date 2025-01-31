@@ -1,16 +1,29 @@
+import { Button } from '@mui/material'
 import styled from 'styled-components'
 
 export const Container = styled.div`
-  background-color: #898889;   
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: calc(100vh - 130px);
-  width: calc(100vw - 280px);  // Subtraindo a largura do sidebar (280px)
-  margin-left: 280px;  // Adicionando margem igual à largura do sidebar
+  max-width: 1000px;
+  margin: 20px auto;
+  padding: 20px;
+  background: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 `
 
-export const LogoImage = styled.img`
-  max-width: 80%;  // Garante que a imagem não fique maior que o container
-  height: auto;  // Mantém a proporção da imagem
+export const Filters = styled.div`
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 20px;
+`
+
+export const StyledButton = styled(Button)`
+  && {
+    background-color: #1976d2;
+    color: white;
+    font-weight: bold;
+    &:hover {
+      background-color: #125ca2;
+    }
+  }
 `

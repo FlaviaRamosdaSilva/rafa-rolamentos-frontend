@@ -4,6 +4,12 @@ import {
   Button,
   Paper,
   Tab,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
   Tabs,
   TextField,
   Typography,
@@ -20,6 +26,7 @@ export function EditarProduto() {
   const [tabIndex, setTabIndex] = useState(0)
   const navigate = useNavigate()
   const [selectedProduto, setSelectedProduto] = useState(null)
+  const [historico, setHistorico] = useState([])
 
   // Esquema de validação com Yup
   const editarProdutoSchema = Yup.object().shape({
@@ -93,6 +100,22 @@ export function EditarProduto() {
     fetchProduto()
   }, [id, navigate, setValue])
 
+  // Buscar histórico do produto
+  useEffect(() => {
+    const fetchHistorico = async () => {
+      try {
+        const response = await apiRafaRolamentos.get(`/produto/${id}/historico`)
+        setHistorico(response.data)
+      } catch (err) {
+        toast.error('Erro ao carregar histórico do produto')
+      }
+    }
+
+    if (tabIndex === 2) {
+      fetchHistorico()
+    }
+  }, [id, tabIndex])
+
   // Envio do formulário
   const onSubmit = async (data) => {
     try {
@@ -140,7 +163,7 @@ export function EditarProduto() {
         >
           <Tab label="Dados do Produto" />
           <Tab label="Estoque" />
-          <Tab label="Histórico" disabled />
+          <Tab label="Histórico" />
         </Tabs>
 
         <form onSubmit={handleSubmit(onSubmit)}>
@@ -267,6 +290,57 @@ export function EditarProduto() {
                   justifyContent: 'flex-end',
                   gap: 2,
                 }}
+              >
+                Voltar
+              </Button>
+            </Box>
+          )}
+          {tabIndex === 2 && (
+            <Box mt={3}>
+              <TableContainer>
+                <Table>
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>Data</TableCell>
+                      <TableCell>Tipo de Alteração</TableCell>
+                      <TableCell>Descrição</TableCell>
+                      <TableCell>Nova Quantidade</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {historico.length > 0 ? (
+                      historico.map((estoqueLog) => {
+                        // Verifica se a data está disponível e formata corretamente
+                        const dataFormatada = estoqueLog.createdAt
+                          ? new Date(estoqueLog.createdAt).toLocaleDateString(
+                              'pt-BR'
+                            )
+                          : 'Data não disponível'
+
+                        return (
+                          <TableRow key={estoqueLog.id}>
+                            <TableCell>{dataFormatada}</TableCell>
+                            <TableCell>{estoqueLog.tipo}</TableCell>
+                            <TableCell>{estoqueLog.descricao}</TableCell>
+                            <TableCell>{estoqueLog.quantidade}</TableCell>
+                          </TableRow>
+                        )
+                      })
+                    ) : (
+                      <TableRow>
+                        <TableCell colSpan={4} align="center">
+                          Nenhum histórico encontrado para este produto.
+                        </TableCell>
+                      </TableRow>
+                    )}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+              <Button
+                onClick={handleGoToEstoque}
+                variant="contained"
+                color="primary"
+                sx={{ mt: 2 }}
               >
                 Voltar
               </Button>
