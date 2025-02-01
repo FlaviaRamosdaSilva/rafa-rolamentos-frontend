@@ -5,17 +5,18 @@ import { Header } from '../components/Header'
 import { Sidebar } from '../components/SideBar'
 import { Clientes } from '../containers/Clientes'
 
+import { AlterarStatus } from '../containers/AlterarStatus/index.jsx'
 import { Compras } from '../containers/Compras/index.jsx'
 import { EditarProduto } from '../containers/EditarProduto/index.jsx'
+import { EditarVenda } from '../containers/EditarVenda/index.jsx'
 import { Estoque } from '../containers/Estoque'
+import { NovaCompra } from '../containers/NovaCompra'
+import { NovaVenda } from '../containers/NovaVenda/index.jsx'
 import { Principal } from '../containers/Principal'
 import { Produtos } from '../containers/Produtos'
 import { Login } from '../containers/Register'
 import { Vendas } from '../containers/Vendas/index.jsx'
 import { UserProvider } from '../hooks/UseContext.jsx'
-
-import { AlterarStatus } from '../containers/AlterarStatus/index.jsx'
-import { NovaCompra } from '../containers/NovaCompra'
 
 function RoutesApp() {
   const location = useLocation() // Obtém a rota atual
@@ -39,6 +40,8 @@ function RoutesApp() {
           <Route element={<EditarProduto />} path="/editar-produto/:id" />
           <Route element={<NovaCompra />} path="/compras/novopedido" />
           <Route element={<AlterarStatus />} path="/compras/:id" />
+          <Route element={<NovaVenda />} path="/vendas/nova" />
+          <Route element={<EditarVenda />} path="/vendas/:id" />
         </Routes>
         {shouldShowHeaderAndSidebar && <Footer />}
       </UserProvider>
