@@ -10,7 +10,7 @@ import {
 } from '@mui/material'
 
 import { format, isValid, parseISO } from 'date-fns'
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import apiRafaRolamentos from '../../service/api'
 import { Container, Filters, StyledButton } from './style'
@@ -75,7 +75,9 @@ export function Compras() {
 
   return (
     <Container>
-      <h2>Compras</h2>
+      <h2 variant="h4" align="center" gutterBottom>
+        Compras
+      </h2>
 
       {/* Filtros de pesquisa */}
       <Filters>

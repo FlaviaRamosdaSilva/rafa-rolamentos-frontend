@@ -11,13 +11,18 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  TextField,
 } from '@mui/material'
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import apiRafaRolamentos from '../../service/api'
-import { Container, SearchContainer, StyledButton } from './style'
+import {
+  Container,
+  FieldContainer,
+  SearchContainer,
+  StyledButton,
+  StyledTextField,
+} from './style'
 
 export function Vendas() {
   const navigate = useNavigate()
@@ -94,39 +99,43 @@ export function Vendas() {
 
   return (
     <Container>
-      <h2>Lista de Vendas</h2>
+      <h2 variant="h4" align="center" gutterBottom>
+        Lista de Vendas
+      </h2>
       <SearchContainer>
-        <TextField
+        <StyledTextField
           label="Buscar Cliente"
           value={searchClient}
           onChange={(e) => setSearchClient(e.target.value)}
         />
-        <Select
-          value={searchStatus}
-          onChange={(e) => setSearchStatus(e.target.value)}
-          displayEmpty
-        >
-          <MenuItem value="">Todos os Status</MenuItem>
-          <MenuItem value="Pendente">Pendente</MenuItem>
-          <MenuItem value="Aprovado">Aprovado</MenuItem>
-          <MenuItem value="Pedido em separação">Pedido em separação</MenuItem>
-          <MenuItem value="Entregue, Aguardando Pagamento">
-            Entregue, Aguardando Pagamento
-          </MenuItem>
-          <MenuItem value="Pedido Finalizado e Pago">
-            Pedido Finalizado e Pago
-          </MenuItem>
-          <MenuItem value="Cancelado">Cancelado</MenuItem>
-        </Select>
-        <Select
-          value={searchClientType}
-          onChange={(e) => setSearchClientType(e.target.value)}
-          displayEmpty
-        >
-          <MenuItem value="">Todos os Tipos</MenuItem>
-          <MenuItem value="lojista">Lojista</MenuItem>
-          <MenuItem value="distribuidor">Distribuidor</MenuItem>
-        </Select>
+        <FieldContainer>
+          <Select
+            value={searchStatus}
+            onChange={(e) => setSearchStatus(e.target.value)}
+            displayEmpty
+          >
+            <MenuItem value="">Todos os Status</MenuItem>
+            <MenuItem value="Pendente">Pendente</MenuItem>
+            <MenuItem value="Aprovado">Aprovado</MenuItem>
+            <MenuItem value="Pedido em separação">Pedido em separação</MenuItem>
+            <MenuItem value="Entregue, Aguardando Pagamento">
+              Entregue, Aguardando Pagamento
+            </MenuItem>
+            <MenuItem value="Pedido Finalizado e Pago">
+              Pedido Finalizado e Pago
+            </MenuItem>
+            <MenuItem value="Cancelado">Cancelado</MenuItem>
+          </Select>
+          <Select
+            value={searchClientType}
+            onChange={(e) => setSearchClientType(e.target.value)}
+            displayEmpty
+          >
+            <MenuItem value="">Todos os Tipos</MenuItem>
+            <MenuItem value="lojista">Lojista</MenuItem>
+            <MenuItem value="distribuidor">Distribuidor</MenuItem>
+          </Select>
+        </FieldContainer>
         <StyledButton
           variant="contained"
           color="primary"
