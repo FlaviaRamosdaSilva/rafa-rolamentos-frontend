@@ -8,6 +8,7 @@ import { useContext, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { UserContext } from '../../hooks/UseContext.jsx'
 import {
+  ButtonMenu,
   IconTextWrapper,
   MenuContainer,
   SecondContainer,
@@ -24,10 +25,12 @@ export const Sidebar = () => {
   const location = useLocation()
   const [isOpen, setIsOpen] = useState(false) // estado para o menu mobile
 
+  const isMobile = window.innerWidth < 768 // Verifica se está no mobile
+
   const handleRedirect = (route) => {
     navigate(route) // Redireciona para a rota específica
     // Opcional: se estiver no mobile, fecha o menu após a navegação
-    setIsOpen(false)
+    if (isMobile) setIsOpen(false)
   }
 
   const handleLogout = () => {
@@ -37,19 +40,25 @@ export const Sidebar = () => {
 
   const isActive = (path) => location.pathname.startsWith(path)
 
-  const handleToggleSidebar = () => {
-    setIsOpen((prev) => !prev)
-  }
+  // const handleToggleSidebar = () => {
+  //    setIsOpen((prev) => !prev)
+  //  }
 
   return (
     <>
-      <button
-        onClick={handleToggleSidebar}
-        style={{ position: 'absolute', top: '20px', left: '20px', zIndex: '2' }}
+      <ButtonMenu
+        onClick={() => setIsOpen(!isOpen)}
+        style={{
+          position: 'fixed',
+          top: '20px',
+          left: '20px',
+          zIndex: '2',
+          display: window.innerWidth < 768 ? 'block' : 'none',
+        }}
       >
         ☰
-      </button>
-      <SidebarContainer isOpen={isOpen}>
+      </ButtonMenu>
+      <SidebarContainer isOpen={isOpen || !isMobile}>
         <WelcomeWrapper>
           <WelcomeText></WelcomeText>
         </WelcomeWrapper>

@@ -86,3 +86,23 @@ export const TextIcon = styled.span`
     color: #3c3d62;
   }
 `
+
+/* Botão fixo no desktop, mas só visível no mobile */
+export const ButtonMenu = styled.button`
+  position: fixed; /* Fixa o botão na tela */
+  top: 20px;
+  left: 20px;
+  z-index: 2;
+  background: transparent;
+  border: none;
+  color: #fff;
+  font-size: 24px;
+  display: block; /* Exibe o botão apenas no mobile */
+
+  /* No desktop, o botão será escondido */
+  @media (min-width: 768px) {
+    button {
+      display: none; /* Não mostra o botão no desktop */
+    }
+  }
+`
