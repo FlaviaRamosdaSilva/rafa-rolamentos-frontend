@@ -1,11 +1,9 @@
-import React from 'react'
 import { Route, Routes, useLocation } from 'react-router-dom'
 import { Footer } from '../components/Footer'
 import { Header } from '../components/Header'
 import { Sidebar } from '../components/SideBar'
-import { Clientes } from '../containers/Clientes'
-
 import { AlterarStatus } from '../containers/AlterarStatus/index.jsx'
+import { Clientes } from '../containers/Clientes'
 import { Compras } from '../containers/Compras/index.jsx'
 import { EditarProduto } from '../containers/EditarProduto/index.jsx'
 import { EditarVenda } from '../containers/EditarVenda/index.jsx'
@@ -21,14 +19,22 @@ import PrivateRoute from './private-route.js'
 
 function RoutesApp() {
   const location = useLocation() // Obtém a rota atual
+  // const [isSidebarOpen, setIsSidebarOpen] = useState(false)
 
   // Define se o header e o sidebar devem ser exibidos
   const shouldShowHeaderAndSidebar = location.pathname !== '/login'
+
+  // const toggleSidebar = () => {
+  //    setIsSidebarOpen(!isSidebarOpen)
+  // }
+
+  /// <ToggleButton isOpen={isSidebarOpen} toggle={toggleSidebar} />
 
   return (
     <>
       <UserProvider>
         {shouldShowHeaderAndSidebar && <Header />}
+
         {shouldShowHeaderAndSidebar && <Sidebar />}
         <Routes>
           <Route element={<Login />} path="/login" />

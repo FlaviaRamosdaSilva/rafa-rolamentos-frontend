@@ -2,13 +2,21 @@ import styled from 'styled-components'
 
 export const SidebarContainer = styled.div`
   /* sidebar */
-  height: 100vh;
+  height: 100%;
   background-color: #1c1c1c;
   width: 220px;
   position: fixed;
-  left: 0;
+  left: ${(props) =>
+    props.isOpen ? '0' : '-220px'}; /* Controla a visibilidade */
   top: 0;
   z-index: 1;
+  transition: left 0.3s ease; /* Transição suave ao abrir/fechar */
+
+  @media (max-width: 768px) {
+    width: 200px;
+    left: ${(props) =>
+      props.isOpen ? '0' : '-100%'}; /* Sidebar ocupa 100% no mobile */
+  }
 `
 
 export const SecondContainer = styled.div`
@@ -57,6 +65,12 @@ export const IconTextWrapper = styled.div`
     font-size: 1.5rem;
     min-width: 1.5rem;
     margin-right: 1rem;
+  }
+
+  /* Ajuste no mobile */
+  @media (max-width: 768px) {
+    margin: 0.5rem 0; /* Menor espaçamento entre os itens no mobile */
+    margin-left: 65px;
   }
 `
 
