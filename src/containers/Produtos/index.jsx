@@ -31,15 +31,15 @@ export function Produtos() {
       .integer('A quantidade mínima deve ser um número inteiro.')
       .required('A quantidade mínima é obrigatória.'),
     custo: Yup.number()
-      .typeError('O custo deve ser um valor decimal.')
+      .typeError('Utilize vírgulas para valor decimal')
       .positive('O custo deve ser um valor positivo.')
       .required('O custo é obrigatório.'),
     preco_lojista: Yup.number()
-      .typeError('O preço para lojista deve ser um valor decimal.')
+      .typeError('Utilize vírgulas para valor decimal')
       .positive('O preço para distribuidor deve ser um valor positivo.')
       .required('O preço para lojista é obrigatório.'),
     preco_distribuidor: Yup.number()
-      .typeError('O preço para distribuidor deve ser um valor decimal.')
+      .typeError('Utilize vírgulas para valor decimal')
       .positive('O preço para lojista deve ser um valor positivo.')
       .required('O preço para distribuidor é obrigatório.'),
   })
@@ -54,28 +54,26 @@ export function Produtos() {
     resolver: yupResolver(produtoSchema),
   })
 
-  const navigate = useNavigate();
+  const navigate = useNavigate()
 
   // Função de submissão do formulário
   const onSubmit = async (data) => {
     try {
-
       // Pega o userId do localStorage// Pega o userId do localStorage
-      const userData = localStorage.getItem('rafaRolamentos:userData');
-      const userId = userData && JSON.parse(userData).id; // Ajuste conforme a estrutura do seu localStorage
-  
+      const userData = localStorage.getItem('rafaRolamentos:userData')
+      const userId = userData && JSON.parse(userData).id // Ajuste conforme a estrutura do seu localStorage
+
       if (!userId) {
-        console.error('Erro: userId não encontrado no localStorage');
-        return;
+        console.error('Erro: userId não encontrado no localStorage')
+        return
       }
 
       await apiRafaRolamentos.post('/produto', { ...data, userId })
       toast.success('Produto criado com sucesso!')
 
-      reset();
+      reset()
 
-      setTimeout(() => navigate('/estoque'), 1000);
-
+      setTimeout(() => navigate('/estoque'), 1000)
     } catch (err) {
       console.error('Erro ao criar produto:', err)
       toast.error('Erro ao criar produto. Verifique os campos.')
@@ -121,7 +119,9 @@ export function Produtos() {
             <FieldContainer>
               <StyledTextField
                 label="Custo"
-                {...register('custo')}
+                {...register('custo', {
+                  setValueAs: (value) => value.replace(',', '.'),
+                })}
                 error={!!errors.custo}
                 helperText={errors.custo?.message}
                 type="text"
@@ -132,7 +132,9 @@ export function Produtos() {
             <FieldContainer>
               <StyledTextField
                 label="Preço para Lojista"
-                {...register('preco_lojista')}
+                {...register('preco_lojista', {
+                  setValueAs: (value) => value.replace(',', '.'),
+                })}
                 error={!!errors.preco_lojista}
                 helperText={errors.preco_lojista?.message}
                 type="text"
@@ -143,7 +145,9 @@ export function Produtos() {
             <FieldContainer>
               <StyledTextField
                 label="Preço para Distribuidor"
-                {...register('preco_distribuidor')}
+                {...register('preco_distribuidor', {
+                  setValueAs: (value) => value.replace(',', '.'),
+                })}
                 error={!!errors.preco_distribuidor}
                 helperText={errors.preco_distribuidor?.message}
                 type="text"

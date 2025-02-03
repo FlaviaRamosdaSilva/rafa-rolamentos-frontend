@@ -6,10 +6,10 @@ export const ContainerMe = styled.div`
   justify-content: center;
   //align-items: center;
   min-height: calc(100vh - 130px);
-  width: calc(100vw - 280px); /* Subtraindo a largura do sidebar (280px) */
+  width: calc(100vw - 220px); /* Subtraindo a largura do sidebar (220px) */
   background-color: #f4f4f4;
   padding: 20px;
-  margin-left: 280px;
+  margin-left: 220px;
 `
 
 export const FormPaper = styled(Paper)`

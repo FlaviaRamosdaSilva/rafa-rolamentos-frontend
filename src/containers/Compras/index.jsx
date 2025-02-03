@@ -68,6 +68,11 @@ export function Compras() {
     return fornecedorMatch && dataMatch
   })
 
+  // Ordenar as compras filtradas pela data, com as mais atuais no topo
+  const comprasOrdenadas = [...comprasFiltradas].sort((a, b) => {
+    return new Date(b.createdAt) - new Date(a.createdAt)
+  })
+
   return (
     <Container>
       <h2>Compras</h2>
@@ -103,8 +108,8 @@ export function Compras() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {comprasFiltradas.length > 0 ? (
-              comprasFiltradas.map((compra) => (
+            {comprasOrdenadas.length > 0 ? (
+              comprasOrdenadas.map((compra) => (
                 <TableRow key={compra.id_compras}>
                   <TableCell>{compra.status_compra}</TableCell>
                   <TableCell>{compra.fornecedor}</TableCell>

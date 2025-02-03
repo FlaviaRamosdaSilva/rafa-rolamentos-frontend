@@ -16,7 +16,13 @@ import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import apiRafaRolamentos from '../../service/api'
-import { ActionContainer, Container, StyledButton, StyledTextField } from './style'
+import {
+  ActionContainer,
+  Container,
+  StyledButton,
+  StyledTableRow,
+  StyledTextField,
+} from './style'
 
 export function Estoque() {
   const [produtos, setProdutos] = useState([])
@@ -87,7 +93,10 @@ export function Estoque() {
           Carregando...
         </Typography>
       ) : (
-        <TableContainer component={Paper} style={{ maxWidth: '1000px', margin: '0 auto' }}>
+        <TableContainer
+          component={Paper}
+          style={{ maxWidth: '1000px', margin: '0 auto' }}
+        >
           <Table>
             <TableHead>
               <TableRow>
@@ -101,7 +110,13 @@ export function Estoque() {
             </TableHead>
             <TableBody>
               {filteredProdutos.map((produto) => (
-                <TableRow key={produto.id_produto}>
+                <StyledTableRow
+                  key={produto.id_produto}
+                  // Se a quantidade mínima for menor que a quantidade total, marca lowStock como true
+                  lowStock={
+                    produto.quantidade_minima > produto.quantidade_total
+                  }
+                >
                   <TableCell>{produto.codigo_produto}</TableCell>
                   <TableCell>{produto.descricao_produto}</TableCell>
                   <TableCell>{produto.fabricante}</TableCell>
@@ -120,15 +135,15 @@ export function Estoque() {
                       <DeleteIcon />
                     </Button>
                   </TableCell>
-                </TableRow>
+                </StyledTableRow>
               ))}
             </TableBody>
           </Table>
         </TableContainer>
       )}
 
-       {/* Modal para Confirmar Exclusão */}
-       <Modal open={modalDeleteOpen} onClose={() => setModalDeleteOpen(false)}>
+      {/* Modal para Confirmar Exclusão */}
+      <Modal open={modalDeleteOpen} onClose={() => setModalDeleteOpen(false)}>
         <Box
           sx={{
             position: 'absolute',

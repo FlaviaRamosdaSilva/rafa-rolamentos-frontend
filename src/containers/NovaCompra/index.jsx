@@ -19,9 +19,10 @@ import { toast } from 'react-toastify'
 import apiRafaRolamentos from '../../service/api'
 import {
   Container,
-  InputContainer,
-  TotalField,
   customModalStyles,
+  InputContainer,
+  StyledButton,
+  TotalField,
 } from './style'
 
 Modal.setAppElement('#root')
@@ -39,6 +40,19 @@ export function NovaCompra() {
   const [editIndex, setEditIndex] = useState(null)
 
   const handleAddItem = () => {
+    // Verifica se o produto já existe na lista de itens
+    const itemExistente = itens.find(
+      (item) => item.produtoId === currentItem.produtoId
+    )
+
+    if (itemExistente) {
+      toast.warning('Item já consta na lista, edite a quantidade')
+      // Zera os dados do modal
+      setCurrentItem({ produtoId: '', quantidade: '', custo: '' })
+      return
+    }
+
+    // Se não existir, adiciona o item normalmente
     setItens([
       ...itens,
       {
@@ -116,15 +130,15 @@ export function NovaCompra() {
           fullWidth
         />
         <TotalField>Total da Compra: R$ {totalCompra.toFixed(2)}</TotalField>
-        <TotalField>Status: Pedido Iniciado</TotalField>
+        <TotalField>Status do Pedido: Iniciado</TotalField>
       </InputContainer>
-      <Button
+      <StyledButton
         variant="contained"
         color="primary"
         onClick={() => setIsModalOpen(true)}
       >
         + Item
-      </Button>
+      </StyledButton>
       <TableContainer component={Paper} style={{ marginTop: 20 }}>
         <Table>
           <TableHead>
@@ -154,7 +168,7 @@ export function NovaCompra() {
                   {item.descricao_produto}
                 </TableCell>
                 <TableCell>{item.quantidade}</TableCell>
-                <TableCell>{item.custo}</TableCell>
+                <TableCell>{parseFloat(item.custo).toFixed(2)}</TableCell>
                 <TableCell>
                   {(
                     item.quantidade * parseFloat(item.custo.replace(',', '.'))
@@ -165,14 +179,14 @@ export function NovaCompra() {
           </TableBody>
         </Table>
       </TableContainer>
-      <Button
+      <StyledButton
         variant="contained"
         color="success"
         style={{ marginTop: 20 }}
         onClick={handleFinalizarCompra}
       >
         Finalizar Compra
-      </Button>
+      </StyledButton>
       <Modal
         isOpen={isModalOpen}
         onRequestClose={() => setIsModalOpen(false)}

@@ -8,6 +8,7 @@ export const Container = styled.div`
   background: #f9f9f9;
   border-radius: 8px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  margin-bottom: 40px;
 `
 
 export const Filters = styled.div`
@@ -18,12 +19,10 @@ export const Filters = styled.div`
 `
 
 export const StyledButton = styled(Button)`
-  && {
-    background-color: #1976d2;
-    color: white;
-    font-weight: bold;
-    &:hover {
-      background-color: #125ca2;
-    }
+  background-color: #949caf !important;
+  color: #3c3d62 !important;
+  font-weight: bold !important;
+  &:hover {
+    background-color: #7c88a1 !important;
   }
 `

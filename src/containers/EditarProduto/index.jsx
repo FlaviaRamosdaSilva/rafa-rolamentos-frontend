@@ -36,15 +36,15 @@ export function EditarProduto() {
       .required('A descrição do produto é obrigatória.'),
     fabricante: Yup.string().required('O fabricante é obrigatório.'),
     custo: Yup.number()
-      .typeError('O custo deve ser um valor decimal.')
+      .typeError('Utilize vírgulas para valor decimal')
       .positive('O custo deve ser um valor positivo.')
       .required('O custo é obrigatório.'),
     preco_lojista: Yup.number()
-      .typeError('O preço para lojista deve ser um valor decimal.')
+      .typeError('Utilize vírgulas para valor decimal')
       .positive('O preço para lojista deve ser um valor positivo.')
       .required('O preço para lojista é obrigatório.'),
     preco_distribuidor: Yup.number()
-      .typeError('O preço para distribuidor deve ser um valor decimal.')
+      .typeError('Utilize vírgulas para valor decimal')
       .positive('O preço para distribuidor deve ser um valor positivo.')
       .required('O preço para distribuidor é obrigatório.'),
     quantidade_total: Yup.number()
@@ -198,7 +198,9 @@ export function EditarProduto() {
               />
               <TextField
                 label="Custo"
-                {...register('custo')}
+                {...register('custo', {
+                  setValueAs: (value) => value.replace(',', '.'),
+                })}
                 error={!!errors.custo}
                 helperText={errors.custo?.message}
                 type="text"
@@ -208,7 +210,9 @@ export function EditarProduto() {
               />
               <TextField
                 label="Preço Lojista"
-                {...register('preco_lojista')}
+                {...register('preco_lojista', {
+                  setValueAs: (value) => value.replace(',', '.'),
+                })}
                 error={!!errors.preco_lojista}
                 helperText={errors.preco_lojista?.message}
                 type="text"
@@ -218,7 +222,9 @@ export function EditarProduto() {
               />
               <TextField
                 label="Preço Distribuidor"
-                {...register('preco_distribuidor')}
+                {...register('preco_distribuidor', {
+                  setValueAs: (value) => value.replace(',', '.'),
+                })}
                 error={!!errors.preco_distribuidor}
                 helperText={errors.preco_distribuidor?.message}
                 type="text"

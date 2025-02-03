@@ -9,13 +9,14 @@ export default createGlobalStyle`
         box-sizing: border-box;
         font-family: 'Inter', sans-serif;
         outline: none;
+    
     }
 
     body, html {
         margin: 0;
         padding: 0;
         -webkit-font-smoothing: antialiased;
-        background: #fff;
+        background: #898889;
         font-family: 'Inter', sans-serif;
     }
 

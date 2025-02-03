@@ -29,6 +29,8 @@ export function NovaVenda() {
   const [discount, setDiscount] = useState('0')
   const [discountReason, setDiscountReason] = useState('Sem desconto')
   const [isDiscountModalOpen, setIsDiscountModalOpen] = useState(false)
+  const [modalDiscount, setModalDiscount] = useState(discount)
+  const [modalDiscountReason, setModalDiscountReason] = useState(discountReason)
 
   useEffect(() => {
     apiRafaRolamentos
@@ -103,6 +105,12 @@ export function NovaVenda() {
       .catch(() => toast.error('Erro ao finalizar venda'))
   }
 
+  const openDiscountModal = () => {
+    setModalDiscount(discount)
+    setModalDiscountReason(discountReason)
+    setIsDiscountModalOpen(true)
+  }
+
   return (
     <Container>
       <h2>Criar Venda</h2>
@@ -129,22 +137,20 @@ export function NovaVenda() {
       >
         + Novo Cliente
       </Button>
+      <h4>Selecione o tipo de cliente</h4>
       <Select
         fullWidth
         value={clientType}
         onChange={(e) => setClientType(e.target.value)}
       >
-        <MenuItem value="Distribuidor">Distribuidor</MenuItem>
-        <MenuItem value="Lojista">Lojista</MenuItem>
+        <MenuItem value="distribuidor">Distribuidor</MenuItem>
+        <MenuItem value="lojista">Lojista</MenuItem>
       </Select>
-      <Button
-        variant="contained"
-        color="secondary"
-        onClick={() => setIsDiscountModalOpen(true)}
-      >
+      <Button variant="contained" color="secondary" onClick={openDiscountModal}>
         Inserir Desconto
       </Button>
       <TotalField>Valor Total: R$ {totalPrice.toFixed(2)}</TotalField>
+      <h4>Digite o produto </h4>
       <TextField
         fullWidth
         label="Buscar Produto"
@@ -212,9 +218,7 @@ export function NovaVenda() {
         </Table>
       </TableContainer>
       <TotalField>Total de Itens: {totalItems}</TotalField>
-      <Button variant="contained" color="success" onClick={handleFinalizeSale}>
-        Finalizar Venda
-      </Button>
+
       {isDiscountModalOpen && (
         <div
           style={{
@@ -256,16 +260,25 @@ export function NovaVenda() {
               <Button
                 variant="contained"
                 color="primary"
-                onClick={() => setIsDiscountModalOpen(false)}
+                onClick={() => {
+                  // Atualiza os estados principais com os valores do modal
+                  setDiscount(modalDiscount)
+                  setDiscountReason(modalDiscountReason)
+                  setIsDiscountModalOpen(false)
+                }}
+                style={{ marginRight: 10 }}
               >
-                Confirmar Desconto
+                Cancelar
               </Button>
               <Button
                 variant="contained"
                 color="secondary"
-                onClick={() => setIsDiscountModalOpen(false)}
+                onClick={() => {
+                  // Fecha o modal sem alterar os estados principais
+                  setIsDiscountModalOpen(false)
+                }}
               >
-                Cancelar
+                Confirmar desconto
               </Button>
             </div>
           </div>

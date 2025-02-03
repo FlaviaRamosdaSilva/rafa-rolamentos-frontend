@@ -262,14 +262,14 @@ export function Clientes() {
                 setNewCliente({ ...newCliente, telefone: e.target.value })
               }
             />
-            <Button
+            <StyledButton
               type="submit"
               variant="contained"
               color="primary"
               style={{ marginTop: '10px' }}
             >
               Salvar
-            </Button>
+            </StyledButton>
           </form>
         </ModalContainer>
       </Modal>

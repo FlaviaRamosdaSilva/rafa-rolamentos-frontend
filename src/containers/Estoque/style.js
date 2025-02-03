@@ -1,4 +1,4 @@
-import { Button, TextField } from '@mui/material'
+import { Button, TableRow, TextField } from '@mui/material'
 import styled from 'styled-components'
 
 export const Container = styled.div`
@@ -8,6 +8,7 @@ export const Container = styled.div`
   align-items: center;
   background-color: #f4f4f4; /* Ajustado para diferenciar da página de Clientes */
   min-height: 100vh;
+  margin-bottom: 40px;
 `
 
 export const ActionContainer = styled.div`
@@ -85,4 +86,11 @@ export const ModalButtonContainer = styled.div`
   justify-content: center;
   gap: 10px;
   margin-top: 20px;
+`
+
+export const StyledTableRow = styled(TableRow)`
+  td,
+  th {
+    color: ${(props) => (props.lowStock ? 'red' : 'inherit')};
+  }
 `

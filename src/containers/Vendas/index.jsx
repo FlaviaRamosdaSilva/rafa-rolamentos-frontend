@@ -17,7 +17,7 @@ import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import apiRafaRolamentos from '../../service/api'
-import { Container, SearchContainer } from './style'
+import { Container, SearchContainer, StyledButton } from './style'
 
 export function Vendas() {
   const navigate = useNavigate()
@@ -65,16 +65,15 @@ export function Vendas() {
       .then(() => {
         toast.success('Status atualizado com sucesso!')
         setIsStatusModalOpen(false)
-        fetchSales() // Atualiza a lista de vendas imediatamente após a alteração do status
+        fetchSales() // Atualiza a lista de vendas
       })
-    apiRafaRolamentos
-      .patch(`/saida/${selectedSaleId}`, { status_pedido: newStatus })
-      .then(() => {
-        toast.success('Status atualizado com sucesso!')
+      .catch((error) => {
+        // Tenta capturar a mensagem de erro do backend
+        const errorMessage =
+          error.response?.data?.message || 'Erro ao atualizar status'
+        toast.error(errorMessage)
         setIsStatusModalOpen(false)
-      })
-      .catch(() => {
-        toast.error('Erro ao atualizar status')
+        navigate('/vendas') // Retorna para a tela de vendas
       })
   }
 
@@ -88,7 +87,7 @@ export function Vendas() {
       ? sale.status_pedido === searchStatus
       : true
     const clientTypeMatch = searchClientType
-      ? sale.tipo_cliente === searchClientType
+      ? sale.tipo_cliente.toLowerCase() === searchClientType
       : true
     return clienteMatch && statusMatch && clientTypeMatch
   })
@@ -128,13 +127,13 @@ export function Vendas() {
           <MenuItem value="lojista">Lojista</MenuItem>
           <MenuItem value="distribuidor">Distribuidor</MenuItem>
         </Select>
-        <Button
+        <StyledButton
           variant="contained"
           color="primary"
           onClick={() => navigate('/vendas/nova')}
         >
           Nova Venda
-        </Button>
+        </StyledButton>
       </SearchContainer>
       <TableContainer component={Paper}>
         <Table>
@@ -177,13 +176,13 @@ export function Vendas() {
                     {new Date(sale.createdAt).toLocaleDateString()}
                   </TableCell>
                   <TableCell>
-                    <Button
+                    <StyledButton
                       variant="contained"
                       color="secondary"
                       onClick={() => handleOpenStatusModal(sale.id_pedido)}
                     >
                       Alterar Status
-                    </Button>
+                    </StyledButton>
                   </TableCell>
                 </TableRow>
               ))

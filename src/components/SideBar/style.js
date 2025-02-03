@@ -4,10 +4,11 @@ export const SidebarContainer = styled.div`
   /* sidebar */
   height: 100vh;
   background-color: #1c1c1c;
-  width: 280px;
+  width: 220px;
   position: fixed;
   left: 0;
   top: 0;
+  z-index: 1;
 `
 
 export const SecondContainer = styled.div`
@@ -53,8 +54,8 @@ export const IconTextWrapper = styled.div`
   // Estilizando os ícones do Material-UI diretamente
   svg {
     color: ${(props) => (props.isActive ? '#fff' : '#787EBE')};
-    font-size: 2.5rem;
-    min-width: 2.5rem;
+    font-size: 1.5rem;
+    min-width: 1.5rem;
     margin-right: 1rem;
   }
 `
@@ -62,7 +63,7 @@ export const IconTextWrapper = styled.div`
 export const TextIcon = styled.span`
   padding: 1rem;
   color: ${(props) => (props.isActive ? '#fff' : '#787EBE')};
-  font-size: 1.3rem;
+  font-size: 1.2rem;
   font-weight: 500;
   white-space: nowrap;
   font-weight: 300;

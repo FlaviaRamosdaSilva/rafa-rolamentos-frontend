@@ -17,6 +17,7 @@ import { Produtos } from '../containers/Produtos'
 import { Login } from '../containers/Register'
 import { Vendas } from '../containers/Vendas/index.jsx'
 import { UserProvider } from '../hooks/UseContext.jsx'
+import PrivateRoute from './private-route.js'
 
 function RoutesApp() {
   const location = useLocation() // Obtém a rota atual
@@ -31,17 +32,19 @@ function RoutesApp() {
         {shouldShowHeaderAndSidebar && <Sidebar />}
         <Routes>
           <Route element={<Login />} path="/login" />
-          <Route element={<Principal />} path="/" />
-          <Route element={<Produtos />} path="/produtos" />
-          <Route element={<Clientes />} path="/clientes" />
-          <Route element={<Estoque />} path="/estoque" />
-          <Route element={<Vendas />} path="/vendas" />
-          <Route element={<Compras />} path="/compras" />
-          <Route element={<EditarProduto />} path="/editar-produto/:id" />
-          <Route element={<NovaCompra />} path="/compras/novopedido" />
-          <Route element={<AlterarStatus />} path="/compras/:id" />
-          <Route element={<NovaVenda />} path="/vendas/nova" />
-          <Route element={<EditarVenda />} path="/vendas/:id" />
+          <Route element={<PrivateRoute />}>
+            <Route element={<Principal />} path="/" />
+            <Route element={<Produtos />} path="/produtos" />
+            <Route element={<Clientes />} path="/clientes" />
+            <Route element={<Estoque />} path="/estoque" />
+            <Route element={<Vendas />} path="/vendas" />
+            <Route element={<Compras />} path="/compras" />
+            <Route element={<EditarProduto />} path="/editar-produto/:id" />
+            <Route element={<NovaCompra />} path="/compras/novopedido" />
+            <Route element={<AlterarStatus />} path="/compras/:id" />
+            <Route element={<NovaVenda />} path="/vendas/nova" />
+            <Route element={<EditarVenda />} path="/vendas/:id" />
+          </Route>
         </Routes>
         {shouldShowHeaderAndSidebar && <Footer />}
       </UserProvider>

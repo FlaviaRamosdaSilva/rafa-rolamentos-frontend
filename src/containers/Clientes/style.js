@@ -6,8 +6,9 @@ export const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  background-color: #898889;
+
   min-height: 100vh;
+  margin-bottom: 40px;
 `
 
 export const ActionContainer = styled.div`
