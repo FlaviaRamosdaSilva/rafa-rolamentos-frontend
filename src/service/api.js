@@ -2,10 +2,10 @@ import axios from 'axios'
 // conforme documentação do axios
 
 const apiRafaRolamentos = axios.create({
-  baseURL: process.env.REACT_APP_API_URL // endereço do backend => FALTA ADICIONAR
+  baseURL: 'https://rafa-rolamentos-backend.vercel.app',
 })
 
-apiRafaRolamentos.interceptors.request.use(async config => {
+apiRafaRolamentos.interceptors.request.use(async (config) => {
   const userData = await localStorage.getItem('rafarolamentos:userData') // trocar para cache
   const token = userData && JSON.parse(userData).token
   config.headers.Authorization = `Bearer ${token}`
