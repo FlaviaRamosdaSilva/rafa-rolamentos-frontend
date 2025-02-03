@@ -6,10 +6,17 @@ export const ContainerMe = styled.div`
   justify-content: center;
   //align-items: center;
   min-height: calc(100vh - 130px);
-  width: calc(100vw - 220px); /* Subtraindo a largura do sidebar (220px) */
+  width: 100vw; /* Subtraindo a largura do sidebar (220px) */
   background-color: #f4f4f4;
-  padding: 20px;
-  margin-left: 220px;
+  padding: 0px;
+
+  @media (max-width: 768px) {
+    margin-left: 0px;
+    height: calc(100vh - 130px);
+    width: 100%;
+    margin-bottom: 80px;
+    padding: 0px;
+  }
 `
 
 export const FormPaper = styled(Paper)`
@@ -22,6 +29,14 @@ export const FormPaper = styled(Paper)`
   height: 100%;
   height: 550px;
   margin-top: 80px;
+
+  @media (max-width: 768px) {
+    margin-left: 0px;
+    height: 800px;
+    width: 100%;
+    margin-top: 5px;
+    margin-bottom: 80px;
+  }
 `
 
 export const FormTitle = styled.h1`
@@ -66,8 +81,13 @@ export const StyledButton = styled(Button)`
   color: #fff !important;
   font-weight: bold !important;
   margin-top: 20px !important;
+
   &:hover {
     background-color: #7c88a1 !important;
+  }
+
+  @media (max-width: 768px) {
+    margin-bottom: 80px !important; /* Adicionando margem inferior para o botão */
   }
 `
 
