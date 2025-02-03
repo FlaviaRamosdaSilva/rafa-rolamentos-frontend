@@ -1,20 +1,20 @@
-import { yupResolver } from '@hookform/resolvers/yup';
-import { useContext } from 'react';
-import { useForm } from 'react-hook-form';
-import { toast } from 'react-toastify';
-import * as Yup from 'yup';
+import { yupResolver } from '@hookform/resolvers/yup'
+import { useContext } from 'react'
+import { useForm } from 'react-hook-form'
+import { toast } from 'react-toastify'
+import * as Yup from 'yup'
 
-import { useNavigate } from 'react-router-dom';
-import Logo from '../../assets/Rafa_Rolamentos_logo Login.png';
-import { ContainerButton } from '../../components/Button/styles';
-import { ErrorMessage } from '../../components/ErrorMessage/index.jsx';
-import { UserContext } from '../../hooks/UseContext.jsx';
-import api from '../../service/api';
-import { Container, ContainerItens, Input, Label } from './styles';
+import { useNavigate } from 'react-router-dom'
+import Logo from '../../assets/Rafa_Rolamentos_logo Login.png'
+import { ContainerButton } from '../../components/Button/styles'
+import { ErrorMessage } from '../../components/ErrorMessage/index.jsx'
+import { UserContext } from '../../hooks/UseContext.jsx'
+import apiRafaRolamentos from '../../service/api.js'
+import { Container, ContainerItens, Input, Label } from './styles'
 
 export function Login() {
-  const { putUserData } = useContext(UserContext);
-  const navigate = useNavigate();
+  const { putUserData } = useContext(UserContext)
+  const navigate = useNavigate()
 
   const schema = Yup.object().shape({
     email: Yup.string()
@@ -23,7 +23,7 @@ export function Login() {
     senha: Yup.string()
       .required('A senha é obrigatória')
       .min(6, 'A senha tem que ter pelo menos 6 dígitos'),
-  });
+  })
 
   const {
     register,
@@ -31,38 +31,38 @@ export function Login() {
     formState: { errors },
   } = useForm({
     resolver: yupResolver(schema),
-  });
+  })
 
   const onSubmit = async (clientData) => {
     try {
-      const { data } = await api.post('/auth/login', {
+      const { data } = await apiRafaRolamentos.post('/auth/login', {
         email: clientData.email,
         senha: clientData.senha,
-      });
-      console.log('Dados retornados pela API:', data); // Verifica os dados retornados
-      putUserData(data);
+      })
+      console.log('Dados retornados pela API:', data) // Verifica os dados retornados
+      putUserData(data)
       // Lógica de sucesso
-      toast.success('Seja Bem-vindo');
+      toast.success('Seja Bem-vindo')
 
       setTimeout(() => {
         if (data.admin) {
-          navigate('/');
+          navigate('/')
         } else {
-          navigate('/'); //alterar depois essa rota
+          navigate('/') //alterar depois essa rota
         }
-      }, 1000);
+      }, 1000)
       // settimeout junto com o UseHystory fazem a página ser redirecionada para o HOME após ser efetuado o login (1segundo depois)
     } catch (error) {
-      console.error('Erro na requisição:', error);
+      console.error('Erro na requisição:', error)
       if (error.response && error.response.status === 401) {
         // Exibir mensagem específica para erro 401
-        toast.error('Verifique seu e-mail e senha');
+        toast.error('Verifique seu e-mail e senha')
       } else {
         // Exibir mensagem genérica para outros erros
-        toast.error('Ocorreu um erro ao processar a solicitação');
+        toast.error('Ocorreu um erro ao processar a solicitação')
       }
     }
-  };
+  }
 
   return (
     <Container>
@@ -89,14 +89,17 @@ export function Login() {
           <a href="/">Esqueceu a Senha?</a>
           <ContainerButton
             type="submit"
-             style={{ justifySelf: 'center', alignSelf: 'center', marginTop: '30px' }}
+            style={{
+              justifySelf: 'center',
+              alignSelf: 'center',
+              marginTop: '30px',
+            }}
           >
             Sign In
           </ContainerButton>
           {/* ao clicar no button com type onsubmit ele vai para a função onsubmit do form e da variavel lá em cima e te dá as informações no console.log */}
         </form>
-       
       </ContainerItens>
     </Container>
-  );
+  )
 }
