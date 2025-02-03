@@ -198,7 +198,7 @@ export function NovaVenda() {
                   </TableCell>
                   <TableCell>
                     R${' '}
-                    {(clientType === 'Distribuidor'
+                    {(clientType === 'distribuidor'
                       ? Number(product.preco_distribuidor)
                       : Number(product.preco_lojista)
                     ).toFixed(2)}
@@ -208,7 +208,7 @@ export function NovaVenda() {
                     {selectedProducts.find(
                       (p) => p.produtoId === product.id_produto
                     )?.quantidade *
-                      (clientType === 'Distribuidor'
+                      (clientType === 'distribuidor'
                         ? product.preco_distribuidor
                         : product.preco_lojista) || 0}
                   </TableCell>

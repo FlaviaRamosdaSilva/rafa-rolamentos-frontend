@@ -70,7 +70,7 @@ export function Clientes() {
         email: selectedCliente.email,
         telefone: selectedCliente.telefone,
       })
-      toast.success('Cliente criado com sucesso')
+      toast.success('Cliente atualizado com sucesso')
       fetchClientes() // Atualiza a lista de clientes
       setModalOpen(false) // Fecha o modal
     } catch (err) {
