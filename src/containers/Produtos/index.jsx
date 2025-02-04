@@ -1,5 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup'
-import React from 'react'
+import { MenuItem } from '@mui/material'
 import { useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
@@ -24,6 +24,7 @@ export function Produtos() {
       .min(10)
       .required('A descrição do produto é obrigatória.'),
     fabricante: Yup.string().required('O fabricante é obrigatório.'),
+    categoria: Yup.string().required('A categoria é obrigatória.'),
     quantidade_total: Yup.number()
       .integer('A quantidade total deve ser um número inteiro.')
       .required('A quantidade total é obrigatória.'),
@@ -115,6 +116,20 @@ export function Produtos() {
                 fullWidth
                 margin="normal"
               />
+            </FieldContainer>
+            <FieldContainer>
+              <StyledTextField
+                select
+                label="Categoria"
+                {...register('categoria')}
+                error={!!errors.categoria}
+                helperText={errors.categoria?.message}
+                fullWidth
+                margin="normal"
+              >
+                <MenuItem value="Motor">Motor</MenuItem>
+                <MenuItem value="Roda">Roda</MenuItem>
+              </StyledTextField>
             </FieldContainer>
             <FieldContainer>
               <StyledTextField

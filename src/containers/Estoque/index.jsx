@@ -12,7 +12,7 @@ import {
   TableRow,
   Typography,
 } from '@mui/material'
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import apiRafaRolamentos from '../../service/api'
@@ -102,6 +102,7 @@ export function Estoque() {
               <TableRow>
                 <TableCell>Código</TableCell>
                 <TableCell>Descrição</TableCell>
+                <TableCell>Categoria</TableCell>
                 <TableCell>Fabricante</TableCell>
                 <TableCell>Qtd Total</TableCell>
                 <TableCell>Qtd Mínima</TableCell>
@@ -119,6 +120,7 @@ export function Estoque() {
                 >
                   <TableCell>{produto.codigo_produto}</TableCell>
                   <TableCell>{produto.descricao_produto}</TableCell>
+                  <TableCell>{produto.categoria}</TableCell>
                   <TableCell>{produto.fabricante}</TableCell>
                   <TableCell>{produto.quantidade_total}</TableCell>
                   <TableCell>{produto.quantidade_minima}</TableCell>

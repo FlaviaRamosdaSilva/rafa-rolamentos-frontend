@@ -2,6 +2,7 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import {
   Box,
   Button,
+  MenuItem,
   Paper,
   Tab,
   Table,
@@ -14,7 +15,7 @@ import {
   TextField,
   Typography,
 } from '@mui/material'
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useNavigate, useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
@@ -35,6 +36,7 @@ export function EditarProduto() {
       .min(10, 'A descrição deve ter pelo menos 10 caracteres.')
       .required('A descrição do produto é obrigatória.'),
     fabricante: Yup.string().required('O fabricante é obrigatório.'),
+    categoria: Yup.string().required('A categoria é obrigatória.'),
     custo: Yup.number()
       .typeError('Utilize vírgulas para valor decimal')
       .positive('O custo deve ser um valor positivo.')
@@ -68,6 +70,7 @@ export function EditarProduto() {
       codigo_produto: '',
       descricao_produto: '',
       fabricante: '',
+      categoria: '',
       custo: '',
       preco_lojista: '',
       preco_distribuidor: '',
@@ -124,6 +127,7 @@ export function EditarProduto() {
           codigo_produto: data.codigo_produto,
           descricao_produto: data.descricao_produto,
           fabricante: data.fabricante,
+          categoria: data.categoria,
           custo: data.custo,
           preco_lojista: data.preco_lojista,
           preco_distribuidor: data.preco_distribuidor,
@@ -196,6 +200,19 @@ export function EditarProduto() {
                 margin="normal"
                 value={valoresForm.fabricante}
               />
+              <TextField
+                select
+                label="Categoria"
+                {...register('categoria')}
+                error={!!errors.categoria}
+                helperText={errors.categoria?.message}
+                fullWidth
+                margin="normal"
+                value={valoresForm.categoria}
+              >
+                <MenuItem value="Motor">Motor</MenuItem>
+                <MenuItem value="Roda">Roda</MenuItem>
+              </TextField>
               <TextField
                 label="Custo"
                 {...register('custo', {
