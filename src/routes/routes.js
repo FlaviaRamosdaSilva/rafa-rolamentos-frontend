@@ -1,4 +1,4 @@
-import { Route, Routes, useLocation } from 'react-router-dom'
+import { Outlet, Route, Routes } from 'react-router-dom'
 import { Footer } from '../components/Footer'
 import { Header } from '../components/Header'
 import { Sidebar } from '../components/SideBar'
@@ -7,37 +7,50 @@ import { Clientes } from '../containers/Clientes'
 import { Compras } from '../containers/Compras/index.jsx'
 import { EditarProduto } from '../containers/EditarProduto/index.jsx'
 import { EditarVenda } from '../containers/EditarVenda/index.jsx'
+import { EsqueceuSenha } from '../containers/EsqueceuSenha'
 import { Estoque } from '../containers/Estoque'
 import { NovaCompra } from '../containers/NovaCompra'
 import { NovaVenda } from '../containers/NovaVenda/index.jsx'
 import { Principal } from '../containers/Principal'
 import { Produtos } from '../containers/Produtos'
 import { Login } from '../containers/Register'
+import { ResetPassword } from '../containers/ResetPassword'
 import { Vendas } from '../containers/Vendas/index.jsx'
 import { UserProvider } from '../hooks/UseContext.jsx'
 import PrivateRoute from './private-route.js'
 
-function RoutesApp() {
-  const location = useLocation() // Obtém a rota atual
-  // const [isSidebarOpen, setIsSidebarOpen] = useState(false)
-
-  // Define se o header e o sidebar devem ser exibidos
-  const shouldShowHeaderAndSidebar = location.pathname !== '/login'
-
-  // const toggleSidebar = () => {
-  //    setIsSidebarOpen(!isSidebarOpen)
-  // }
-
-  /// <ToggleButton isOpen={isSidebarOpen} toggle={toggleSidebar} />
-
+function DefaultLayout() {
   return (
     <>
-      <UserProvider>
-        {shouldShowHeaderAndSidebar && <Header />}
+      <Header />
+      <Sidebar />
+      <div>
+        <Outlet />
+      </div>
+      <Footer />
+    </>
+  )
+}
 
-        {shouldShowHeaderAndSidebar && <Sidebar />}
-        <Routes>
+/**
+ * Layout que não exibe Header, Sidebar ou Footer
+ */
+function MinimalLayout() {
+  return <Outlet />
+}
+function RoutesApp() {
+  return (
+    <UserProvider>
+      <Routes>
+        <Route element={<MinimalLayout />}>
           <Route element={<Login />} path="/login" />
+          <Route element={<EsqueceuSenha />} path="/esqueceu-senha" />
+          <Route
+            element={<ResetPassword />}
+            path="/reset-password/:recoverToken"
+          />{' '}
+        </Route>
+        <Route element={<DefaultLayout />}>
           <Route element={<PrivateRoute />}>
             <Route element={<Principal />} path="/" />
             <Route element={<Produtos />} path="/produtos" />
@@ -51,10 +64,9 @@ function RoutesApp() {
             <Route element={<NovaVenda />} path="/vendas/nova" />
             <Route element={<EditarVenda />} path="/vendas/:id" />
           </Route>
-        </Routes>
-        {shouldShowHeaderAndSidebar && <Footer />}
-      </UserProvider>
-    </>
+        </Route>
+      </Routes>
+    </UserProvider>
   )
 }
 

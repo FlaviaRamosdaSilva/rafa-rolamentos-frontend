@@ -1,10 +1,9 @@
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useContext } from 'react'
 import { useForm } from 'react-hook-form'
+import { useNavigate, useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import * as Yup from 'yup'
-
-import { useNavigate } from 'react-router-dom'
 import Logo from '../../assets/Rafa_Rolamentos_logo Login.png'
 import { ContainerButton } from '../../components/Button/styles'
 import { ErrorMessage } from '../../components/ErrorMessage/index.jsx'
@@ -12,17 +11,19 @@ import { UserContext } from '../../hooks/UseContext.jsx'
 import apiRafaRolamentos from '../../service/api.js'
 import { Container, ContainerItens, Input, Label } from './styles'
 
-export function Login() {
+export function ResetPassword() {
+  const { recoverToken } = useParams() // Pega o token da URL
+
   const { putUserData } = useContext(UserContext)
   const navigate = useNavigate()
 
   const schema = Yup.object().shape({
-    email: Yup.string()
-      .email('Digite um e-mail válido')
-      .required('O e-mail é obrigatório'),
-    senha: Yup.string()
+    newPassword: Yup.string()
       .required('A senha é obrigatória')
       .min(6, 'A senha tem que ter pelo menos 6 dígitos'),
+    confirmPassword: Yup.string()
+      .required('A confirmação da senha é obrigatória')
+      .oneOf([Yup.ref('newPassword'), null], 'As senhas não coincidem'),
   })
 
   const {
@@ -35,30 +36,24 @@ export function Login() {
 
   const onSubmit = async (clientData) => {
     try {
-      const { data } = await apiRafaRolamentos.post('/auth/login', {
-        email: clientData.email,
-        senha: clientData.senha,
-      })
-      console.log('Dados retornados pela API:', data) // Verifica os dados retornados
+      const { data } = await apiRafaRolamentos.patch(
+        `/user/reset-password/${recoverToken}`, // Corrigido para usar o recoverToken  da URL
+        {
+          newPassword: clientData.newPassword,
+        }
+      )
+      console.log('Dados retornados pela API:', data)
       putUserData(data)
-      // Lógica de sucesso
-      toast.success('Seja Bem-vindo')
+      toast.success('Senha alterada com sucesso')
 
       setTimeout(() => {
-        if (data.admin) {
-          navigate('/')
-        } else {
-          navigate('/') //alterar depois essa rota
-        }
+        navigate('/login')
       }, 1000)
-      // settimeout junto com o UseHystory fazem a página ser redirecionada para o HOME após ser efetuado o login (1segundo depois)
     } catch (error) {
       console.error('Erro na requisição:', error)
       if (error.response && error.response.status === 401) {
-        // Exibir mensagem específica para erro 401
         toast.error('Verifique seu e-mail e senha')
       } else {
-        // Exibir mensagem genérica para outros erros
         toast.error('Ocorreu um erro ao processar a solicitação')
       }
     }
@@ -68,25 +63,24 @@ export function Login() {
     <Container>
       <ContainerItens>
         <img src={Logo} alt="logo-Rolamentos" />
-        <h1>Login</h1>
+        <h1>Nova Senha</h1>
         <form noValidate onSubmit={handleSubmit(onSubmit)}>
-          <Label>E-mail</Label>
-          <Input
-            type="email"
-            {...register('email')}
-            error={errors.email?.message}
-            autoComplete="email"
-          />
-          <ErrorMessage>{errors.email?.message}</ErrorMessage>
-          <Label>Senha</Label>
+          <Label>Nova Senha</Label>
           <Input
             type="password"
-            {...register('senha')}
-            error={errors.senha?.message}
+            {...register('newPassword')}
+            error={errors.newPassword?.message}
             autoComplete="current-password"
           />
           <ErrorMessage>{errors.senha?.message}</ErrorMessage>
-          <a href="/esqueceu-senha">Esqueceu a Senha?</a>
+          <Label>Confirmação da senha</Label>
+          <Input
+            type="password"
+            {...register('confirmPassword')}
+            error={errors.confirmPassword?.message}
+            autoComplete="current-password"
+          />
+          <ErrorMessage>{errors.confirmPassword?.message}</ErrorMessage>
           <ContainerButton
             type="submit"
             style={{
@@ -95,7 +89,7 @@ export function Login() {
               marginTop: '30px',
             }}
           >
-            Sign In
+            Alterar Senha
           </ContainerButton>
           {/* ao clicar no button com type onsubmit ele vai para a função onsubmit do form e da variavel lá em cima e te dá as informações no console.log */}
         </form>

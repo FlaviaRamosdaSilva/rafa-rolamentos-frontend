@@ -12,7 +12,7 @@ import { UserContext } from '../../hooks/UseContext.jsx'
 import apiRafaRolamentos from '../../service/api.js'
 import { Container, ContainerItens, Input, Label } from './styles'
 
-export function Login() {
+export function EsqueceuSenha() {
   const { putUserData } = useContext(UserContext)
   const navigate = useNavigate()
 
@@ -20,9 +20,6 @@ export function Login() {
     email: Yup.string()
       .email('Digite um e-mail válido')
       .required('O e-mail é obrigatório'),
-    senha: Yup.string()
-      .required('A senha é obrigatória')
-      .min(6, 'A senha tem que ter pelo menos 6 dígitos'),
   })
 
   const {
@@ -35,20 +32,20 @@ export function Login() {
 
   const onSubmit = async (clientData) => {
     try {
-      const { data } = await apiRafaRolamentos.post('/auth/login', {
+      const { data } = await apiRafaRolamentos.post('auth/recover-password', {
         email: clientData.email,
-        senha: clientData.senha,
       })
-      console.log('Dados retornados pela API:', data) // Verifica os dados retornados
       putUserData(data)
       // Lógica de sucesso
-      toast.success('Seja Bem-vindo')
+      toast.success(
+        'Se um usuário com este email existe, as instruções foram enviadas.'
+      )
 
       setTimeout(() => {
         if (data.admin) {
-          navigate('/')
+          navigate('/login')
         } else {
-          navigate('/') //alterar depois essa rota
+          navigate('/login') //alterar depois essa rota
         }
       }, 1000)
       // settimeout junto com o UseHystory fazem a página ser redirecionada para o HOME após ser efetuado o login (1segundo depois)
@@ -56,10 +53,10 @@ export function Login() {
       console.error('Erro na requisição:', error)
       if (error.response && error.response.status === 401) {
         // Exibir mensagem específica para erro 401
-        toast.error('Verifique seu e-mail e senha')
+        toast.error('Verifique seu e-mail', error)
       } else {
         // Exibir mensagem genérica para outros erros
-        toast.error('Ocorreu um erro ao processar a solicitação')
+        toast.error('Ocorreu um erro ao processar a solicitação', error)
       }
     }
   }
@@ -68,9 +65,11 @@ export function Login() {
     <Container>
       <ContainerItens>
         <img src={Logo} alt="logo-Rolamentos" />
-        <h1>Login</h1>
+        <h1>Recuperação de senha</h1>
         <form noValidate onSubmit={handleSubmit(onSubmit)}>
-          <Label>E-mail</Label>
+          <Label>
+            Digite seu e-mail para enviarmos um token de recuperação de senha:
+          </Label>
           <Input
             type="email"
             {...register('email')}
@@ -78,15 +77,7 @@ export function Login() {
             autoComplete="email"
           />
           <ErrorMessage>{errors.email?.message}</ErrorMessage>
-          <Label>Senha</Label>
-          <Input
-            type="password"
-            {...register('senha')}
-            error={errors.senha?.message}
-            autoComplete="current-password"
-          />
-          <ErrorMessage>{errors.senha?.message}</ErrorMessage>
-          <a href="/esqueceu-senha">Esqueceu a Senha?</a>
+
           <ContainerButton
             type="submit"
             style={{
@@ -95,7 +86,7 @@ export function Login() {
               marginTop: '30px',
             }}
           >
-            Sign In
+            Recuperar senha
           </ContainerButton>
           {/* ao clicar no button com type onsubmit ele vai para a função onsubmit do form e da variavel lá em cima e te dá as informações no console.log */}
         </form>

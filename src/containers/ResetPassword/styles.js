@@ -91,7 +91,7 @@ export const Label = styled.p`
   font-weight: 500;
   line-height: normal;
   margin-left: 18px;
-  width: 61px;
+  width: auto;
   height: 20px;
 `
 
