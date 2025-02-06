@@ -51,6 +51,7 @@ export function EditarProduto() {
   const navigate = useNavigate()
   const [selectedProduto, setSelectedProduto] = useState<Produto | null>(null)
   const [historico, setHistorico] = useState<EstoqueLog[]>([])
+  const [forceRender, setForceRender] = useState(false)
 
   // Esquema de validação com Yup
   const editarProdutoSchema = useMemo(
@@ -172,6 +173,15 @@ export function EditarProduto() {
     navigate('/Estoque')
   }
 
+  useEffect(() => {
+    if (selectedProduto) {
+      setForceRender(false) // Reset para garantir um novo ciclo de renderização
+      setTimeout(() => {
+        setForceRender(true) // Força o re-render após o modal estar montado
+      }, 100) // Pequeno delay para garantir o cálculo após o modal abrir
+    }
+  }, [selectedProduto])
+
   return (
     <Box sx={{ maxWidth: 800, margin: '0 auto', mt: 4 }}>
       <Paper elevation={3} sx={{ p: 4 }}>
@@ -183,6 +193,15 @@ export function EditarProduto() {
         <Tabs
           value={tabIndex}
           onChange={(_, newValue) => setTabIndex(newValue)}
+          TabIndicatorProps={{
+            style: { display: 'none' }, // Remove o sublinhado azul
+          }}
+          sx={{
+            '& .MuiTab-root': {
+              minHeight: '48px', // Mantém altura consistente das abas
+              padding: '12px 16px', // Ajusta o espaçamento interno das abas
+            },
+          }}
         >
           <Tab label="Dados do Produto" />
           <Tab label="Estoque" />
@@ -193,6 +212,7 @@ export function EditarProduto() {
           {tabIndex === 0 && (
             <Box mt={3}>
               <TextField
+                key={forceRender ? 'rendered' : 'initial'}
                 label="Código"
                 {...register('codigo_produto')}
                 error={!!errors.codigo_produto}
@@ -202,6 +222,7 @@ export function EditarProduto() {
                 value={valoresForm.codigo_produto}
               />
               <TextField
+                key={forceRender ? 'rendered2' : 'initial2'}
                 label="Descrição"
                 {...register('descricao_produto')}
                 error={!!errors.descricao_produto}
@@ -211,6 +232,7 @@ export function EditarProduto() {
                 value={valoresForm.descricao_produto}
               />
               <TextField
+                key={forceRender ? 'rendered3' : 'initial3'}
                 label="Fabricante"
                 {...register('fabricante')}
                 error={!!errors.fabricante}
@@ -220,6 +242,7 @@ export function EditarProduto() {
                 value={valoresForm.fabricante}
               />
               <TextField
+                key={forceRender ? 'rendered4' : 'initial4'}
                 select
                 label="Categoria"
                 {...register('categoria')}
@@ -233,6 +256,7 @@ export function EditarProduto() {
                 <MenuItem value="Roda">Roda</MenuItem>
               </TextField>
               <TextField
+                key={forceRender ? 'rendered5' : 'initial5'}
                 label="Custo"
                 {...register('custo', {
                   setValueAs: (value) => value.replace(',', '.'),
@@ -245,6 +269,7 @@ export function EditarProduto() {
                 value={valoresForm.custo}
               />
               <TextField
+                key={forceRender ? 'rendered6' : 'initial6'}
                 label="Preço Lojista"
                 {...register('preco_lojista', {
                   setValueAs: (value) => value.replace(',', '.'),
@@ -257,6 +282,7 @@ export function EditarProduto() {
                 value={valoresForm.preco_lojista}
               />
               <TextField
+                key={forceRender ? 'rendered7' : 'initial7'}
                 label="Preço Distribuidor"
                 {...register('preco_distribuidor', {
                   setValueAs: (value) => value.replace(',', '.'),
