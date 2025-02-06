@@ -1,7 +1,6 @@
 import { MenuItem, Select } from '@mui/material'
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-
 import { toast } from 'react-toastify'
 import apiRafaRolamentos from '../../service/api'
 import {
@@ -12,15 +11,32 @@ import {
   StyledButton,
 } from './style'
 
+// Definição dos tipos para os dados da compra
+interface Item {
+  Produto: {
+    descricao_produto: string
+  }
+  quantidade: number
+  custo: number
+  total_item: number
+}
+
+interface Purchase {
+  fornecedor: string
+  valor_total_compra: number
+  status_compra: string
+  itens: Item[]
+}
+
 export function AlterarStatus() {
-  const { id } = useParams()
+  const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
-  const [purchase, setPurchase] = useState(null)
-  const [status, setStatus] = useState('')
+  const [purchase, setPurchase] = useState<Purchase | null>(null)
+  const [status, setStatus] = useState<string>('')
 
   useEffect(() => {
     apiRafaRolamentos
-      .get(`/entrada/${id}`)
+      .get<Purchase>(`/entrada/${id}`)
       .then((response) => {
         setPurchase(response.data)
         setStatus(response.data.status_compra)
@@ -49,10 +65,7 @@ export function AlterarStatus() {
       <h2>Detalhes da Compra</h2>
       <DetailsField>Fornecedor: {purchase.fornecedor}</DetailsField>
       <DetailsField>
-        Total da Compra: R${' '}
-        {Number(purchase.valor_total_compra)
-          ? Number(purchase.valor_total_compra).toFixed(2)
-          : '0.00'}
+        Total da Compra: R$ {Number(purchase.valor_total_compra).toFixed(2)}
       </DetailsField>
       <h3>Itens</h3>
       {purchase.itens && purchase.itens.length > 0 ? (
@@ -60,9 +73,7 @@ export function AlterarStatus() {
           <DetailsField key={index}>
             Produto: {item.Produto.descricao_produto} | Quantidade:{' '}
             {item.quantidade} | Custo: R$ {item.custo} | Total do Item: R${' '}
-            {Number(item.total_item)
-              ? Number(item.total_item).toFixed(2)
-              : '0.00'}
+            {Number(item.total_item).toFixed(2)}
           </DetailsField>
         ))
       ) : (
@@ -70,11 +81,10 @@ export function AlterarStatus() {
       )}
       <ContainerStatus>
         <h3>Status da Compra</h3>
-        {/* Campo que exibe o status atual */}
         <DetailsField>Status Atual: {purchase.status_compra}</DetailsField>
         <Select
           value={status}
-          onChange={(e) => setStatus(e.target.value)}
+          onChange={(e) => setStatus(e.target.value as string)}
           label="Status da Compra"
           displayEmpty
         >

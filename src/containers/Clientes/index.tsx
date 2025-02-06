@@ -23,47 +23,59 @@ import {
   StyledTextField,
 } from './style'
 
+// Definição da interface para Cliente
+interface Cliente {
+  id_cliente: string
+  nome: string
+  email: string
+  telefone: string
+}
+
 export function Clientes() {
-  const [clientes, setClientes] = useState([])
-  const [loading, setLoading] = useState(true)
-  const [, setError] = useState(null)
-  const [search, setSearch] = useState('')
-  const [modalOpen, setModalOpen] = useState(false)
-  const [modalCreateOpen, setModalCreateOpen] = useState(false) // Modal para criar cliente
-  const [newCliente, setNewCliente] = useState({
+  const [clientes, setClientes] = useState<Cliente[]>([])
+  const [loading, setLoading] = useState<boolean>(true)
+  const [, setError] = useState<string | null>(null)
+  const [search, setSearch] = useState<string>('')
+  const [modalOpen, setModalOpen] = useState<boolean>(false)
+  const [modalCreateOpen, setModalCreateOpen] = useState<boolean>(false)
+  const [newCliente, setNewCliente] = useState<Cliente>({
+    id_cliente: '',
     nome: '',
     email: '',
     telefone: '',
-  }) // Estado para novo cliente
-  const [selectedCliente, setSelectedCliente] = useState(null)
+  })
+  const [selectedCliente, setSelectedCliente] = useState<Cliente | null>(null)
 
   const fetchClientes = async () => {
     try {
-      const response = await apiRafaRolamentos.get('/cliente')
+      const response = await apiRafaRolamentos.get<Cliente[]>('/cliente')
       setClientes(response.data)
       setLoading(false)
     } catch (err) {
       setError('Erro ao buscar clientes')
-      toast.error('Erro ao buscar clientes:', err)
+      toast.error('Erro ao buscar clientes')
       setLoading(false)
     }
   }
 
-  const handleSearch = (e) => setSearch(e.target.value)
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) =>
+    setSearch(e.target.value)
 
-  const handleEdit = async (id) => {
+  const handleEdit = async (id: string) => {
     try {
-      const response = await apiRafaRolamentos.get(`/cliente/${id}`)
+      const response = await apiRafaRolamentos.get<Cliente>(`/cliente/${id}`)
       setSelectedCliente(response.data)
       setModalOpen(true)
     } catch (err) {
       console.error('Erro ao buscar cliente:', err)
-      toast.error('Erro ao buscar cliente:', err)
+      toast.error('Erro ao buscar cliente')
     }
   }
 
-  const handleUpdate = async (e) => {
+  const handleUpdate = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+    if (!selectedCliente) return
+
     try {
       await apiRafaRolamentos.put(`/cliente/${selectedCliente.id_cliente}`, {
         nome: selectedCliente.nome,
@@ -71,21 +83,20 @@ export function Clientes() {
         telefone: selectedCliente.telefone,
       })
       toast.success('Cliente atualizado com sucesso')
-      fetchClientes() // Atualiza a lista de clientes
-      setModalOpen(false) // Fecha o modal
+      fetchClientes()
+      setModalOpen(false)
     } catch (err) {
       console.error('Erro ao atualizar cliente:', err)
-      toast.error('Erro ao atualizar cliente', err)
+      toast.error('Erro ao atualizar cliente')
     }
   }
 
-  const handleCreate = async (e) => {
+  const handleCreate = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
 
     try {
-      // Pega o userId do localStorage
       const userData = localStorage.getItem('rafaRolamentos:userData')
-      const userId = userData && JSON.parse(userData).id // Ajuste conforme a estrutura do seu localStorage
+      const userId = userData ? JSON.parse(userData).id : null
 
       if (!userId) {
         console.error('Erro: userId não encontrado no localStorage')
@@ -93,16 +104,14 @@ export function Clientes() {
         return
       }
 
-      // Faz a requisição POST com userId
       await apiRafaRolamentos.post('/cliente', { ...newCliente, userId })
       toast.success('Cliente criado com sucesso')
-      console.log('Cliente criado com sucesso')
-      fetchClientes() // Atualiza a lista de clientes
-      setModalCreateOpen(false) // Fecha o modal de criação
-      setNewCliente({ nome: '', email: '', telefone: '' }) // Limpa o estado
+      fetchClientes()
+      setModalCreateOpen(false)
+      setNewCliente({ id_cliente: '', nome: '', email: '', telefone: '' })
     } catch (err) {
       console.error('Erro ao criar cliente:', err)
-      toast.error('Erro ao criar cliente:', err)
+      toast.error('Erro ao criar cliente')
     }
   }
 
@@ -114,7 +123,7 @@ export function Clientes() {
     .filter((cliente) =>
       cliente.nome.toLowerCase().includes(search.toLowerCase())
     )
-    .sort((a, b) => a.nome.localeCompare(b.nome)) // Ordena a lista por nome
+    .sort((a, b) => a.nome.localeCompare(b.nome))
 
   return (
     <Container>
@@ -130,7 +139,7 @@ export function Clientes() {
         />
         <StyledButton
           variant="contained"
-          onClick={() => setModalCreateOpen(true)} // Abre o modal de criação
+          onClick={() => setModalCreateOpen(true)}
         >
           Criar Cliente
         </StyledButton>

@@ -15,47 +15,78 @@ import {
   TextField,
   Typography,
 } from '@mui/material'
-import { useEffect, useState } from 'react'
-import { useForm } from 'react-hook-form'
+import { useEffect, useMemo, useState } from 'react'
+import { Resolver, SubmitHandler, useForm } from 'react-hook-form'
 import { useNavigate, useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import * as Yup from 'yup'
 import apiRafaRolamentos from '../../service/api'
 
+// Interface para Produto
+interface Produto {
+  id_produto: string
+  codigo_produto: string
+  descricao_produto: string
+  fabricante: string
+  categoria: string
+  custo: number
+  preco_lojista: number
+  preco_distribuidor: number
+  quantidade_total: number
+  quantidade_minima: number
+}
+
+// Interface para Histórico de Estoque
+interface EstoqueLog {
+  id: string
+  createdAt: string
+  tipo: string
+  descricao: string
+  quantidade: number
+}
+
 export function EditarProduto() {
-  const { id } = useParams()
-  const [tabIndex, setTabIndex] = useState(0)
+  const { id } = useParams<{ id: string }>()
+  const [tabIndex, setTabIndex] = useState<number>(0)
   const navigate = useNavigate()
-  const [selectedProduto, setSelectedProduto] = useState(null)
-  const [historico, setHistorico] = useState([])
+  const [selectedProduto, setSelectedProduto] = useState<Produto | null>(null)
+  const [historico, setHistorico] = useState<EstoqueLog[]>([])
 
   // Esquema de validação com Yup
-  const editarProdutoSchema = Yup.object().shape({
-    codigo_produto: Yup.string().required('O código do produto é obrigatório.'),
-    descricao_produto: Yup.string()
-      .min(10, 'A descrição deve ter pelo menos 10 caracteres.')
-      .required('A descrição do produto é obrigatória.'),
-    fabricante: Yup.string().required('O fabricante é obrigatório.'),
-    categoria: Yup.string().required('A categoria é obrigatória.'),
-    custo: Yup.number()
-      .typeError('Utilize vírgulas para valor decimal')
-      .positive('O custo deve ser um valor positivo.')
-      .required('O custo é obrigatório.'),
-    preco_lojista: Yup.number()
-      .typeError('Utilize vírgulas para valor decimal')
-      .positive('O preço para lojista deve ser um valor positivo.')
-      .required('O preço para lojista é obrigatório.'),
-    preco_distribuidor: Yup.number()
-      .typeError('Utilize vírgulas para valor decimal')
-      .positive('O preço para distribuidor deve ser um valor positivo.')
-      .required('O preço para distribuidor é obrigatório.'),
-    quantidade_total: Yup.number()
-      .integer('A quantidade total deve ser um número inteiro.')
-      .required('A quantidade total é obrigatória.'),
-    quantidade_minima: Yup.number()
-      .integer('A quantidade mínima deve ser um número inteiro.')
-      .required('A quantidade mínima é obrigatória.'),
-  })
+  const editarProdutoSchema = useMemo(
+    () =>
+      Yup.object().shape({
+        codigo_produto: Yup.string().required(
+          'O código do produto é obrigatório.'
+        ),
+        descricao_produto: Yup.string()
+          .min(10, 'A descrição deve ter pelo menos 10 caracteres.')
+          .required('A descrição do produto é obrigatória.'),
+        fabricante: Yup.string().required('O fabricante é obrigatório.'),
+        categoria: Yup.string().required('A categoria é obrigatória.'),
+        custo: Yup.number()
+          .typeError('Utilize vírgulas para valor decimal')
+          .positive('O custo deve ser um valor positivo.')
+          .required('O custo é obrigatório.'),
+        preco_lojista: Yup.number()
+          .typeError('Utilize vírgulas para valor decimal')
+          .positive('O preço para lojista deve ser um valor positivo.')
+          .required('O preço para lojista é obrigatório.'),
+        preco_distribuidor: Yup.number()
+          .typeError('Utilize vírgulas para valor decimal')
+          .positive('O preço para distribuidor deve ser um valor positivo.')
+          .required('O preço para distribuidor é obrigatório.'),
+        quantidade_total: Yup.number()
+          .integer('A quantidade total deve ser um número inteiro.')
+          .required('A quantidade total é obrigatória.'),
+        quantidade_minima: Yup.number()
+          .integer('A quantidade mínima deve ser um número inteiro.')
+          .required('A quantidade mínima é obrigatória.'),
+      }),
+    []
+  )
+
+  type ProdutoForm = Omit<Produto, 'id_produto'>
 
   // Configuração do React Hook Form
   const {
@@ -64,50 +95,41 @@ export function EditarProduto() {
     watch,
     setValue,
     formState: { errors },
-  } = useForm({
-    resolver: yupResolver(editarProdutoSchema),
-    defaultValues: {
-      codigo_produto: '',
-      descricao_produto: '',
-      fabricante: '',
-      categoria: '',
-      custo: '',
-      preco_lojista: '',
-      preco_distribuidor: '',
-      quantidade_total: '',
-      quantidade_minima: '',
-    },
+  } = useForm<ProdutoForm>({
+    resolver: yupResolver(editarProdutoSchema) as Resolver<ProdutoForm>,
   })
 
-  // Sincronizar os valores do formulário com os inputs
   const valoresForm = watch()
 
   // Buscar produto pelo ID e popular o formulário
   useEffect(() => {
     const fetchProduto = async () => {
       try {
-        const response = await apiRafaRolamentos.get(`/produto/${id}`)
-        console.log('Produto carregado:', response.data)
+        const response = await apiRafaRolamentos.get<Produto>(`/produto/${id}`)
         setSelectedProduto(response.data)
-
         Object.keys(response.data).forEach((key) => {
-          setValue(key, response.data[key]) //
-          // Atualiza os valores do formulário corretamente
+          if (key in editarProdutoSchema.fields) {
+            setValue(
+              key as keyof ProdutoForm,
+              response.data[key as keyof ProdutoForm]
+            )
+          }
         })
       } catch (err) {
         toast.error('Erro ao carregar produto')
         navigate('/estoque')
       }
     }
-
     fetchProduto()
-  }, [id, navigate, setValue])
+  }, [id, navigate, setValue, editarProdutoSchema.fields])
 
   // Buscar histórico do produto
   useEffect(() => {
     const fetchHistorico = async () => {
       try {
-        const response = await apiRafaRolamentos.get(`/produto/${id}/historico`)
+        const response = await apiRafaRolamentos.get<EstoqueLog[]>(
+          `/produto/${id}/historico`
+        )
         setHistorico(response.data)
       } catch (err) {
         toast.error('Erro ao carregar histórico do produto')
@@ -120,26 +142,23 @@ export function EditarProduto() {
   }, [id, tabIndex])
 
   // Envio do formulário
-  const onSubmit = async (data) => {
+  const onSubmit: SubmitHandler<ProdutoForm> = async (data) => {
     try {
+      if (!id) {
+        toast.error('Erro: ID do produto não encontrado.')
+        return
+      }
+
       if (tabIndex === 0) {
-        await apiRafaRolamentos.put(`/produto/${selectedProduto.id_produto}`, {
-          codigo_produto: data.codigo_produto,
-          descricao_produto: data.descricao_produto,
-          fabricante: data.fabricante,
-          categoria: data.categoria,
-          custo: data.custo,
-          preco_lojista: data.preco_lojista,
-          preco_distribuidor: data.preco_distribuidor,
+        await apiRafaRolamentos.put(`/produto/${id}`, {
+          ...data, // ✅ Envia todos os campos do formulário
+          id_produto: id, // ✅ Adicionamos o ID manualmente
         })
       } else if (tabIndex === 1) {
-        await apiRafaRolamentos.put(
-          `/produto/estoque/${selectedProduto.id_produto}`,
-          {
-            quantidade_total: data.quantidade_total,
-            quantidade_minima: data.quantidade_minima,
-          }
-        )
+        await apiRafaRolamentos.put(`/produto/estoque/${id}`, {
+          quantidade_total: data.quantidade_total,
+          quantidade_minima: data.quantidade_minima,
+        })
       }
 
       toast.success('Produto atualizado com sucesso!')
@@ -228,14 +247,21 @@ export function EditarProduto() {
               <TextField
                 label="Preço Lojista"
                 {...register('preco_lojista', {
-                  setValueAs: (value) => value.replace(',', '.'),
+                  setValueAs: (value) =>
+                    value ? parseFloat(value.replace(',', '.')) || 0 : 0,
                 })}
                 error={!!errors.preco_lojista}
                 helperText={errors.preco_lojista?.message}
                 type="text"
                 fullWidth
                 margin="normal"
-                value={valoresForm.preco_lojista}
+                value={
+                  valoresForm.preco_lojista !== undefined
+                    ? Number(valoresForm.preco_lojista)
+                        .toFixed(2)
+                        .replace('.', ',')
+                    : ''
+                }
               />
               <TextField
                 label="Preço Distribuidor"
@@ -247,7 +273,11 @@ export function EditarProduto() {
                 type="text"
                 fullWidth
                 margin="normal"
-                value={valoresForm.preco_distribuidor}
+                value={
+                  valoresForm.preco_distribuidor
+                    ? valoresForm.preco_distribuidor.toFixed(2)
+                    : ''
+                }
               />
               <Button
                 type="submit"

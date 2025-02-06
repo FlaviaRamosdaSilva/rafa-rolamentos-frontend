@@ -6,8 +6,8 @@ export const Container = styled.div`
   justify-content: center;
   align-items: center;
   height: calc(100vh - 130px);
-  width: calc(100vw - 220px); // Subtraindo a largura do sidebar (220px)
-  margin-left: 220px; // Adicionando margem igual à largura do sidebar
+  width: calc(100vw - 280px); // Subtraindo a largura do sidebar (280px)
+  margin-left: 280px; // Adicionando margem igual à largura do sidebar
 
   @media (max-width: 768px) {
     margin-left: 0px;

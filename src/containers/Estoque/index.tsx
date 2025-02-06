@@ -24,12 +24,22 @@ import {
   StyledTextField,
 } from './style'
 
+interface Produto {
+  id_produto: string
+  codigo_produto: string
+  descricao_produto: string
+  categoria: string
+  fabricante: string
+  quantidade_total: number
+  quantidade_minima: number
+}
+
 export function Estoque() {
-  const [produtos, setProdutos] = useState([])
-  const [loading, setLoading] = useState(true)
-  const [search, setSearch] = useState('')
-  const [modalDeleteOpen, setModalDeleteOpen] = useState(false)
-  const [selectedProduto, setSelectedProduto] = useState(null)
+  const [produtos, setProdutos] = useState<Produto[]>([])
+  const [loading, setLoading] = useState<boolean>(true)
+  const [search, setSearch] = useState<string>('')
+  const [modalDeleteOpen, setModalDeleteOpen] = useState<boolean>(false)
+  const [selectedProduto, setSelectedProduto] = useState<Produto | null>(null)
 
   const navigate = useNavigate()
 
@@ -44,19 +54,22 @@ export function Estoque() {
     }
   }
 
-  const handleSearch = (e) => setSearch(e.target.value)
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearch(e.target.value)
+  }
 
-  // Redirecionar para a página de edição do produto
-  const handleEdit = (id_produto) => {
+  const handleEdit = (id_produto: string) => {
     navigate(`/editar-produto/${id_produto}`)
   }
 
   const handleDelete = async () => {
     try {
-      await apiRafaRolamentos.delete(`/produto/${selectedProduto.id_produto}`)
-      toast.success('Produto excluído com sucesso')
-      fetchProdutos()
-      setModalDeleteOpen(false)
+      if (selectedProduto) {
+        await apiRafaRolamentos.delete(`/produto/${selectedProduto.id_produto}`)
+        toast.success('Produto excluído com sucesso')
+        fetchProdutos()
+        setModalDeleteOpen(false)
+      }
     } catch (err) {
       toast.error('Erro ao excluir produto')
     }

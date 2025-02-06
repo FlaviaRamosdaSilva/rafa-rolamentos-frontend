@@ -12,25 +12,46 @@ import {
   TableRow,
   TextField,
 } from '@mui/material'
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import apiRafaRolamentos from '../../service/api'
 import { Container, TotalField } from './styles'
 
+// Definição das interfaces para tipagem
+interface Client {
+  id_cliente: string
+  nome: string
+}
+
+interface Product {
+  id_produto: string
+  descricao_produto: string
+  preco_distribuidor: number
+  preco_lojista: number
+}
+
+interface SelectedProduct {
+  produtoId: string
+  quantidade: number
+}
+
 export function NovaVenda() {
   const navigate = useNavigate()
-  const [clients, setClients] = useState([])
-  const [products, setProducts] = useState([])
-  const [selectedClient, setSelectedClient] = useState('')
-  const [clientType, setClientType] = useState('')
-  const [searchProduct, setSearchProduct] = useState('')
-  const [selectedProducts, setSelectedProducts] = useState([])
-  const [discount, setDiscount] = useState('0')
-  const [discountReason, setDiscountReason] = useState('Sem desconto')
-  const [isDiscountModalOpen, setIsDiscountModalOpen] = useState(false)
-  const [modalDiscount, setModalDiscount] = useState(discount)
-  const [modalDiscountReason, setModalDiscountReason] = useState(discountReason)
+  const [clients, setClients] = useState<Client[]>([])
+  const [products, setProducts] = useState<Product[]>([])
+  const [selectedClient, setSelectedClient] = useState<string>('')
+  const [clientType, setClientType] = useState<string>('')
+  const [searchProduct, setSearchProduct] = useState<string>('')
+  const [selectedProducts, setSelectedProducts] = useState<SelectedProduct[]>(
+    []
+  )
+  const [discount, setDiscount] = useState<string>('0')
+  const [discountReason, setDiscountReason] = useState<string>('Sem desconto')
+  const [isDiscountModalOpen, setIsDiscountModalOpen] = useState<boolean>(false)
+  const [modalDiscount, setModalDiscount] = useState<string>(discount)
+  const [modalDiscountReason, setModalDiscountReason] =
+    useState<string>(discountReason)
 
   useEffect(() => {
     apiRafaRolamentos
@@ -44,22 +65,17 @@ export function NovaVenda() {
       .catch((error) => console.error('Erro ao buscar produtos:', error))
   }, [])
 
-  const handleProductSelect = (productId) => {
-    if (selectedProducts.some((p) => p.produtoId === productId)) {
-      setSelectedProducts(
-        selectedProducts.filter((p) => p.produtoId !== productId)
-      )
-    } else {
-      setSelectedProducts([
-        ...selectedProducts,
-        { produtoId: productId, quantidade: 1 },
-      ])
-    }
+  const handleProductSelect = (productId: string) => {
+    setSelectedProducts((prevSelectedProducts) =>
+      prevSelectedProducts.some((p) => p.produtoId === productId)
+        ? prevSelectedProducts.filter((p) => p.produtoId !== productId)
+        : [...prevSelectedProducts, { produtoId: productId, quantidade: 1 }]
+    )
   }
 
-  const handleQuantityChange = (productId, quantidade) => {
-    setSelectedProducts(
-      selectedProducts.map((p) =>
+  const handleQuantityChange = (productId: string, quantidade: string) => {
+    setSelectedProducts((prevSelectedProducts) =>
+      prevSelectedProducts.map((p) =>
         p.produtoId === productId ? { ...p, quantidade: Number(quantidade) } : p
       )
     )
@@ -69,10 +85,11 @@ export function NovaVenda() {
     (acc, item) => acc + item.quantidade,
     0
   )
+
   const totalPriceWithoutDiscount = selectedProducts.reduce((acc, item) => {
     const product = products.find((p) => p.id_produto === item.produtoId)
     const price =
-      clientType === 'Distribuidor'
+      clientType === 'distribuidor'
         ? product?.preco_distribuidor
         : product?.preco_lojista
     return acc + item.quantidade * (Number(price) || 0)
@@ -205,12 +222,17 @@ export function NovaVenda() {
                   </TableCell>
                   <TableCell>
                     R${' '}
-                    {selectedProducts.find(
-                      (p) => p.produtoId === product.id_produto
-                    )?.quantidade *
-                      (clientType === 'distribuidor'
-                        ? product.preco_distribuidor
-                        : product.preco_lojista) || 0}
+                    {(() => {
+                      const selectedProduct = selectedProducts.find(
+                        (p) => p.produtoId === product.id_produto
+                      )
+                      return selectedProduct
+                        ? (selectedProduct.quantidade || 0) *
+                            (clientType === 'distribuidor'
+                              ? product.preco_distribuidor
+                              : product.preco_lojista)
+                        : 0
+                    })().toFixed(2)}
                   </TableCell>
                 </TableRow>
               ))}

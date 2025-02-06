@@ -6,16 +6,28 @@ import { toast } from 'react-toastify'
 import * as Yup from 'yup'
 import Logo from '../../assets/Rafa_Rolamentos_logo Login.png'
 import { ContainerButton } from '../../components/Button/styles'
-import { ErrorMessage } from '../../components/ErrorMessage/index.jsx'
-import { UserContext } from '../../hooks/UseContext.jsx'
-import apiRafaRolamentos from '../../service/api.js'
+import { ErrorMessage } from '../../components/ErrorMessage'
+import { UserContext } from '../../hooks/UseContext'
+import apiRafaRolamentos from '../../service/api'
 import { Container, ContainerItens, Input, Label } from './styles'
 
-export function ResetPassword() {
-  const { recoverToken } = useParams() // Pega o token da URL
+// Definição da estrutura dos dados do formulário
+interface ResetPasswordFormData {
+  newPassword: string
+  confirmPassword: string
+}
 
-  const { putUserData } = useContext(UserContext)
+export function ResetPassword() {
+  const { recoverToken } = useParams<{ recoverToken: string }>() // Pega o token da URL
+
+  const userContext = useContext(UserContext)
   const navigate = useNavigate()
+
+  if (!userContext) {
+    throw new Error('UserContext must be used within a UserProvider')
+  }
+
+  const { putUserData } = userContext
 
   const schema = Yup.object().shape({
     newPassword: Yup.string()
@@ -23,25 +35,26 @@ export function ResetPassword() {
       .min(6, 'A senha tem que ter pelo menos 6 dígitos'),
     confirmPassword: Yup.string()
       .required('A confirmação da senha é obrigatória')
-      .oneOf([Yup.ref('newPassword'), null], 'As senhas não coincidem'),
+      .oneOf([Yup.ref('newPassword')], 'As senhas não coincidem'),
   })
 
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm({
+  } = useForm<ResetPasswordFormData>({
     resolver: yupResolver(schema),
   })
 
-  const onSubmit = async (clientData) => {
+  const onSubmit = async (clientData: ResetPasswordFormData) => {
     try {
       const { data } = await apiRafaRolamentos.patch(
-        `/user/reset-password/${recoverToken}`, // Corrigido para usar o recoverToken  da URL
+        `/user/reset-password/${recoverToken}`,
         {
           newPassword: clientData.newPassword,
         }
       )
+
       console.log('Dados retornados pela API:', data)
       putUserData(data)
       toast.success('Senha alterada com sucesso')
@@ -49,7 +62,7 @@ export function ResetPassword() {
       setTimeout(() => {
         navigate('/login')
       }, 1000)
-    } catch (error) {
+    } catch (error: any) {
       console.error('Erro na requisição:', error)
       if (error.response && error.response.status === 401) {
         toast.error('Verifique seu e-mail e senha')
@@ -72,7 +85,8 @@ export function ResetPassword() {
             error={errors.newPassword?.message}
             autoComplete="current-password"
           />
-          <ErrorMessage>{errors.senha?.message}</ErrorMessage>
+          <ErrorMessage>{errors.newPassword?.message}</ErrorMessage>
+
           <Label>Confirmação da senha</Label>
           <Input
             type="password"
@@ -81,6 +95,7 @@ export function ResetPassword() {
             autoComplete="current-password"
           />
           <ErrorMessage>{errors.confirmPassword?.message}</ErrorMessage>
+
           <ContainerButton
             type="submit"
             style={{
@@ -91,7 +106,6 @@ export function ResetPassword() {
           >
             Alterar Senha
           </ContainerButton>
-          {/* ao clicar no button com type onsubmit ele vai para a função onsubmit do form e da variavel lá em cima e te dá as informações no console.log */}
         </form>
       </ContainerItens>
     </Container>

@@ -7,6 +7,7 @@ import {
   TableHead,
   TableRow,
   TextField,
+  Typography,
 } from '@mui/material'
 
 import { format, isValid, parseISO } from 'date-fns'
@@ -15,17 +16,27 @@ import { useNavigate } from 'react-router-dom'
 import apiRafaRolamentos from '../../service/api'
 import { Container, Filters, StyledButton } from './style'
 
+// Definição da interface para Compra
+interface Compra {
+  id_compras: string
+  status_compra: string
+  fornecedor: string
+  valor_total_compra: number
+  data_compra: string
+  createdAt: string
+}
+
 export function Compras() {
   const navigate = useNavigate()
-  const [compras, setCompras] = useState([])
-  const [searchFornecedor, setSearchFornecedor] = useState('')
-  const [searchData] = useState(null)
+  const [compras, setCompras] = useState<Compra[]>([])
+  const [searchFornecedor, setSearchFornecedor] = useState<string>('')
+  const [searchData] = useState<Date | null>(null)
 
   // Buscar compras na API
   useEffect(() => {
     const fetchCompras = async () => {
       try {
-        const response = await apiRafaRolamentos.get('/entrada')
+        const response = await apiRafaRolamentos.get<Compra[]>('/entrada')
         setCompras(response.data)
       } catch (error) {
         console.error('Erro ao buscar compras:', error)
@@ -41,7 +52,7 @@ export function Compras() {
       .includes(searchFornecedor.toLowerCase())
 
     // 📌 Converter a data da compra para o formato correto
-    let compraDataFormatted = null
+    let compraDataFormatted: string | null = null
     if (compra.data_compra) {
       try {
         const parsedDate = parseISO(compra.data_compra) // Converte a data do banco
@@ -69,15 +80,14 @@ export function Compras() {
   })
 
   // Ordenar as compras filtradas pela data, com as mais atuais no topo
-  const comprasOrdenadas = [...comprasFiltradas].sort((a, b) => {
-    return new Date(b.createdAt) - new Date(a.createdAt)
-  })
-
+  const comprasOrdenadas = [...comprasFiltradas].sort(
+    (a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
+  )
   return (
     <Container>
-      <h2 variant="h4" align="center" gutterBottom>
+      <Typography variant="h4" align="center" gutterBottom>
         Compras
-      </h2>
+      </Typography>
 
       {/* Filtros de pesquisa */}
       <Filters>
@@ -116,7 +126,10 @@ export function Compras() {
                   <TableCell>{compra.status_compra}</TableCell>
                   <TableCell>{compra.fornecedor}</TableCell>
                   <TableCell>
-                    R$ {parseFloat(compra.valor_total_compra).toFixed(2)}
+                    R${' '}
+                    {parseFloat(compra.valor_total_compra.toString()).toFixed(
+                      2
+                    )}
                   </TableCell>
                   <TableCell>
                     {new Date(compra.createdAt).toLocaleDateString('pt-BR')}

@@ -39,7 +39,7 @@ export const customModalStyles = {
     borderRadius: '10px', // Borda arredondada
     padding: '20px',
     display: 'flex',
-    flexDirection: 'column',
+    flexDirection: 'column' as const,
     justifyContent: 'center',
     alignItems: 'center',
   },

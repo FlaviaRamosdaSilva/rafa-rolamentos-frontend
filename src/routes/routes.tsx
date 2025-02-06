@@ -2,22 +2,22 @@ import { Outlet, Route, Routes } from 'react-router-dom'
 import { Footer } from '../components/Footer'
 import { Header } from '../components/Header'
 import { Sidebar } from '../components/SideBar'
-import { AlterarStatus } from '../containers/AlterarStatus/index.jsx'
+import { AlterarStatus } from '../containers/AlterarStatus/index'
 import { Clientes } from '../containers/Clientes'
-import { Compras } from '../containers/Compras/index.jsx'
-import { EditarProduto } from '../containers/EditarProduto/index.jsx'
-import { EditarVenda } from '../containers/EditarVenda/index.jsx'
+import { Compras } from '../containers/Compras/index'
+import { EditarProduto } from '../containers/EditarProduto/index'
+import { EditarVenda } from '../containers/EditarVenda/index'
 import { EsqueceuSenha } from '../containers/EsqueceuSenha'
 import { Estoque } from '../containers/Estoque'
 import { NovaCompra } from '../containers/NovaCompra'
-import { NovaVenda } from '../containers/NovaVenda/index.jsx'
+import { NovaVenda } from '../containers/NovaVenda/index'
 import { Principal } from '../containers/Principal'
 import { Produtos } from '../containers/Produtos'
 import { Login } from '../containers/Register'
 import { ResetPassword } from '../containers/ResetPassword'
-import { Vendas } from '../containers/Vendas/index.jsx'
-import { UserProvider } from '../hooks/UseContext.jsx'
-import PrivateRoute from './private-route.js'
+import { Vendas } from '../containers/Vendas/index'
+import { UserProvider } from '../hooks/UseContext'
+import PrivateRoute from './private-route'
 
 function DefaultLayout() {
   return (
@@ -47,7 +47,7 @@ function RoutesApp() {
           <Route element={<EsqueceuSenha />} path="/esqueceu-senha" />
           <Route
             element={<ResetPassword />}
-            path="/reset-password/:recoverToken"
+            path="/users/reset-password/:recoverToken"
           />{' '}
         </Route>
         <Route element={<DefaultLayout />}>

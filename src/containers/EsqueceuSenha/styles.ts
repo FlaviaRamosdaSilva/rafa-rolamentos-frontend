@@ -2,6 +2,10 @@ import styled from 'styled-components'
 
 import Background from '../../assets/Background-Rolamentos.png'
 
+interface InputProps {
+  error?: string
+}
+
 export const Container = styled.div`
   height: 100vh;
   width: 100vw;
@@ -69,7 +73,7 @@ export const ContainerItens = styled.div`
   }
 `
 
-export const Input = styled.input`
+export const Input = styled.input<InputProps>`
   width: 560px;
   height: 45px;
   border-radius: 30px;

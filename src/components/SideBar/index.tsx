@@ -6,7 +6,7 @@ import LogoutSharpIcon from '@mui/icons-material/LogoutSharp'
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart'
 import { useContext, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
-import { UserContext } from '../../hooks/UseContext.jsx'
+import { UserContext } from '../../hooks/UseContext'
 import {
   ButtonMenu,
   IconTextWrapper,
@@ -19,30 +19,30 @@ import {
 } from './style'
 
 export const Sidebar = () => {
-  const { logout } = useContext(UserContext)
-
+  const userContext = useContext(UserContext)
   const navigate = useNavigate()
   const location = useLocation()
-  const [isOpen, setIsOpen] = useState(false) // estado para o menu mobile
+  const [isOpen, setIsOpen] = useState<boolean>(false) // Estado para o menu mobile
+
+  if (!userContext) {
+    throw new Error('UserContext deve ser usado dentro de um UserProvider')
+  }
+
+  const { logout } = userContext
 
   const isMobile = window.innerWidth < 768 // Verifica se está no mobile
 
-  const handleRedirect = (route) => {
-    navigate(route) // Redireciona para a rota específica
-    // Opcional: se estiver no mobile, fecha o menu após a navegação
+  const handleRedirect = (route: string) => {
+    navigate(route)
     if (isMobile) setIsOpen(false)
   }
 
   const handleLogout = () => {
-    logout() // Chama a função de logout
-    navigate('/login') // Redireciona para a tela de registro
+    logout()
+    navigate('/login')
   }
 
-  const isActive = (path) => location.pathname.startsWith(path)
-
-  // const handleToggleSidebar = () => {
-  //    setIsOpen((prev) => !prev)
-  //  }
+  const isActive = (path: string) => location.pathname.startsWith(path)
 
   return (
     <>
@@ -65,7 +65,7 @@ export const Sidebar = () => {
 
         <MenuContainer>
           <SecondContainer>
-            <IconTextWrapper className="pt-5">
+            <IconTextWrapper className="pt-5" isActive={isActive('/Compras')}>
               <ShoppingCartIcon />
               <TextIcon
                 onClick={() => handleRedirect('/Compras')}
@@ -75,7 +75,7 @@ export const Sidebar = () => {
               </TextIcon>
             </IconTextWrapper>
 
-            <IconTextWrapper>
+            <IconTextWrapper isActive={isActive('/Produtos')}>
               <AutoAwesomeMosaicSharpIcon />
               <TextIcon
                 onClick={() => handleRedirect('/Produtos')}
@@ -85,7 +85,7 @@ export const Sidebar = () => {
               </TextIcon>
             </IconTextWrapper>
 
-            <IconTextWrapper>
+            <IconTextWrapper isActive={isActive('/Estoque')}>
               <InventorySharpIcon />
               <TextIcon
                 onClick={() => handleRedirect('/Estoque')}
@@ -95,7 +95,7 @@ export const Sidebar = () => {
               </TextIcon>
             </IconTextWrapper>
 
-            <IconTextWrapper>
+            <IconTextWrapper isActive={isActive('/Clientes')}>
               <AccountBoxSharpIcon />
               <TextIcon
                 onClick={() => handleRedirect('/Clientes')}
@@ -105,7 +105,7 @@ export const Sidebar = () => {
               </TextIcon>
             </IconTextWrapper>
 
-            <IconTextWrapper>
+            <IconTextWrapper isActive={isActive('/Vendas')}>
               <AppRegistrationSharpIcon />
               <TextIcon
                 onClick={() => handleRedirect('/Vendas')}
@@ -115,9 +115,12 @@ export const Sidebar = () => {
               </TextIcon>
             </IconTextWrapper>
 
-            <IconTextWrapper onClick={handleLogout}>
+            <IconTextWrapper
+              onClick={handleLogout}
+              isActive={isActive('/Logout')}
+            >
               <LogoutSharpIcon />
-              <TextIcon>Logout</TextIcon>
+              <TextIcon isActive={isActive('/Logout')}>Logout</TextIcon>
             </IconTextWrapper>
           </SecondContainer>
         </MenuContainer>

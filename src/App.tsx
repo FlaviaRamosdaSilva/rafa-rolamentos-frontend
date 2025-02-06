@@ -1,4 +1,4 @@
-import RoutesApp from './routes/routes' // ajuste o caminho conforme sua estrutura de pastas
+import RoutesApp from './routes/routes'
 
 function App() {
   return (

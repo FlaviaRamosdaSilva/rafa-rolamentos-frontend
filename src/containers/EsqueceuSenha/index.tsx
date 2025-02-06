@@ -1,64 +1,65 @@
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useContext } from 'react'
-import { useForm } from 'react-hook-form'
+import { SubmitHandler, useForm } from 'react-hook-form'
+import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import * as Yup from 'yup'
 
-import { useNavigate } from 'react-router-dom'
 import Logo from '../../assets/Rafa_Rolamentos_logo Login.png'
 import { ContainerButton } from '../../components/Button/styles'
-import { ErrorMessage } from '../../components/ErrorMessage/index.jsx'
-import { UserContext } from '../../hooks/UseContext.jsx'
-import apiRafaRolamentos from '../../service/api.js'
+import { ErrorMessage } from '../../components/ErrorMessage/index'
+import { UserContext } from '../../hooks/UseContext'
+import apiRafaRolamentos from '../../service/api'
 import { Container, ContainerItens, Input, Label } from './styles'
 
-export function Login() {
-  const { putUserData } = useContext(UserContext)
+// Definição do tipo para os dados do formulário
+interface RecoverPasswordForm {
+  email: string
+}
+
+export function EsqueceuSenha() {
+  const userContext = useContext(UserContext)
+
+  const putUserData = userContext?.putUserData || (() => {})
+
   const navigate = useNavigate()
 
+  // Esquema de validação com Yup
   const schema = Yup.object().shape({
     email: Yup.string()
       .email('Digite um e-mail válido')
       .required('O e-mail é obrigatório'),
-    senha: Yup.string()
-      .required('A senha é obrigatória')
-      .min(6, 'A senha tem que ter pelo menos 6 dígitos'),
   })
 
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm({
+  } = useForm<RecoverPasswordForm>({
     resolver: yupResolver(schema),
   })
 
-  const onSubmit = async (clientData) => {
+  const onSubmit: SubmitHandler<RecoverPasswordForm> = async (clientData) => {
     try {
-      const { data } = await apiRafaRolamentos.post('/auth/login', {
+      const { data } = await apiRafaRolamentos.post('auth/recover-password', {
         email: clientData.email,
-        senha: clientData.senha,
       })
-      console.log('Dados retornados pela API:', data) // Verifica os dados retornados
+
       putUserData(data)
+
       // Lógica de sucesso
-      toast.success('Seja Bem-vindo')
+      toast.success(
+        'Se um usuário com este email existe, as instruções foram enviadas.'
+      )
 
       setTimeout(() => {
-        if (data.admin) {
-          navigate('/')
-        } else {
-          navigate('/') //alterar depois essa rota
-        }
+        navigate('/login')
       }, 1000)
-      // settimeout junto com o UseHystory fazem a página ser redirecionada para o HOME após ser efetuado o login (1segundo depois)
-    } catch (error) {
+    } catch (error: any) {
       console.error('Erro na requisição:', error)
-      if (error.response && error.response.status === 401) {
-        // Exibir mensagem específica para erro 401
-        toast.error('Verifique seu e-mail e senha')
+      if (error.response?.status === 401) {
+        toast.error('Verifique seu e-mail')
       } else {
-        // Exibir mensagem genérica para outros erros
         toast.error('Ocorreu um erro ao processar a solicitação')
       }
     }
@@ -68,9 +69,11 @@ export function Login() {
     <Container>
       <ContainerItens>
         <img src={Logo} alt="logo-Rolamentos" />
-        <h1>Login</h1>
+        <h1>Recuperação de senha</h1>
         <form noValidate onSubmit={handleSubmit(onSubmit)}>
-          <Label>E-mail</Label>
+          <Label>
+            Digite seu e-mail para enviarmos um token de recuperação de senha:
+          </Label>
           <Input
             type="email"
             {...register('email')}
@@ -78,15 +81,7 @@ export function Login() {
             autoComplete="email"
           />
           <ErrorMessage>{errors.email?.message}</ErrorMessage>
-          <Label>Senha</Label>
-          <Input
-            type="password"
-            {...register('senha')}
-            error={errors.senha?.message}
-            autoComplete="current-password"
-          />
-          <ErrorMessage>{errors.senha?.message}</ErrorMessage>
-          <a href="/esqueceu-senha">Esqueceu a Senha?</a>
+
           <ContainerButton
             type="submit"
             style={{
@@ -95,7 +90,7 @@ export function Login() {
               marginTop: '30px',
             }}
           >
-            Sign In
+            Recuperar senha
           </ContainerButton>
           {/* ao clicar no button com type onsubmit ele vai para a função onsubmit do form e da variavel lá em cima e te dá as informações no console.log */}
         </form>

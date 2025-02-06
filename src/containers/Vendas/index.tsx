@@ -11,6 +11,7 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  Typography,
 } from '@mui/material'
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
@@ -24,27 +25,33 @@ import {
   StyledTextField,
 } from './style'
 
+// Definição da interface para as vendas
+interface Sale {
+  id_pedido: string
+  clienteId: string
+  status_pedido: string
+  preco_final: number
+  quantidade_total_produtos: number
+  tipo_cliente: string
+  createdAt: string
+}
+
+// Definição da interface para os clientes
+interface Client {
+  id_cliente: string
+  nome: string
+}
+
 export function Vendas() {
   const navigate = useNavigate()
-  const [sales, setSales] = useState([])
-  const fetchSales = () => {
-    apiRafaRolamentos
-      .get('/saida')
-      .then((response) => {
-        const sortedSales = response.data.sort(
-          (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
-        )
-        setSales(sortedSales)
-      })
-      .catch((error) => console.error('Erro ao buscar vendas:', error))
-  }
-  const [clients, setClients] = useState([])
-  const [searchClient, setSearchClient] = useState('')
-  const [searchStatus, setSearchStatus] = useState('')
-  const [isStatusModalOpen, setIsStatusModalOpen] = useState(false)
-  const [selectedSaleId, setSelectedSaleId] = useState(null)
-  const [newStatus, setNewStatus] = useState('')
-  const [searchClientType, setSearchClientType] = useState('')
+  const [sales, setSales] = useState<Sale[]>([])
+  const [clients, setClients] = useState<Client[]>([])
+  const [searchClient, setSearchClient] = useState<string>('')
+  const [searchStatus, setSearchStatus] = useState<string>('')
+  const [isStatusModalOpen, setIsStatusModalOpen] = useState<boolean>(false)
+  const [selectedSaleId, setSelectedSaleId] = useState<number | null>(null)
+  const [newStatus, setNewStatus] = useState<string>('')
+  const [searchClientType, setSearchClientType] = useState<string>('')
 
   useEffect(() => {
     fetchSales()
@@ -55,16 +62,31 @@ export function Vendas() {
       .catch((error) => console.error('Erro ao buscar clientes:', error))
   }, [])
 
-  const handleEditSale = (id) => {
+  const fetchSales = () => {
+    apiRafaRolamentos
+      .get('/saida')
+      .then((response) => {
+        const sortedSales = response.data.sort(
+          (a: Sale, b: Sale) =>
+            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        )
+        setSales(sortedSales)
+      })
+      .catch((error) => console.error('Erro ao buscar vendas:', error))
+  }
+
+  const handleEditSale = (id: string) => {
     navigate(`/vendas/${id}`)
   }
 
-  const handleOpenStatusModal = (id) => {
+  const handleOpenStatusModal = (id: any) => {
     setSelectedSaleId(id)
     setIsStatusModalOpen(true)
   }
 
   const handleUpdateStatus = () => {
+    if (selectedSaleId === null) return
+
     apiRafaRolamentos
       .patch(`/saida/${selectedSaleId}`, { status_pedido: newStatus })
       .then(() => {
@@ -73,12 +95,11 @@ export function Vendas() {
         fetchSales() // Atualiza a lista de vendas
       })
       .catch((error) => {
-        // Tenta capturar a mensagem de erro do backend
         const errorMessage =
           error.response?.data?.message || 'Erro ao atualizar status'
         toast.error(errorMessage)
         setIsStatusModalOpen(false)
-        navigate('/vendas') // Retorna para a tela de vendas
+        navigate('/vendas')
       })
   }
 
@@ -99,9 +120,9 @@ export function Vendas() {
 
   return (
     <Container>
-      <h2 variant="h4" align="center" gutterBottom>
+      <Typography variant="h4" align="center" gutterBottom>
         Lista de Vendas
-      </h2>
+      </Typography>
       <SearchContainer>
         <StyledTextField
           label="Buscar Cliente"

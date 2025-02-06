@@ -58,7 +58,7 @@ export function Produtos() {
   const navigate = useNavigate()
 
   // Função de submissão do formulário
-  const onSubmit = async (data) => {
+  const onSubmit = async (data: any) => {
     try {
       // Pega o userId do localStorage// Pega o userId do localStorage
       const userData = localStorage.getItem('rafaRolamentos:userData')

@@ -1,6 +1,10 @@
 import { Button, TableRow, TextField } from '@mui/material'
 import styled from 'styled-components'
 
+interface StyledTableRowProps {
+  lowStock?: boolean
+}
+
 export const Container = styled.div`
   padding: 20px;
   display: flex;
@@ -88,7 +92,7 @@ export const ModalButtonContainer = styled.div`
   margin-top: 20px;
 `
 
-export const StyledTableRow = styled(TableRow)`
+export const StyledTableRow = styled(TableRow)<StyledTableRowProps>`
   td,
   th {
     color: ${(props) => (props.lowStock ? 'red' : 'inherit')};

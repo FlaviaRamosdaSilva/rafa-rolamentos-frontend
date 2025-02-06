@@ -1,12 +1,17 @@
 import { Button, Paper, TextField } from '@mui/material'
 import styled from 'styled-components'
 
-export const ContainerMe = styled.div`
+interface StyledContainerProps {
+  maxWidth?: string
+  sx?: { mt?: number }
+}
+
+export const ContainerMe = styled.div<StyledContainerProps>`
   display: flex;
   justify-content: center;
   //align-items: center;
   min-height: calc(100vh - 130px);
-  width: 100vw; /* Subtraindo a largura do sidebar (220px) */
+  width: 100vw; /* Subtraindo a largura do sidebar (280px) */
   background-color: #f4f4f4;
   padding: 0px;
 
