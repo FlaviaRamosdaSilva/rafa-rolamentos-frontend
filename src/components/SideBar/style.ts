@@ -21,7 +21,7 @@ export const SidebarContainer = styled.div<SidebarProps>`
   transition: left 0.3s ease; /* Transição suave ao abrir/fechar */
 
   @media (max-width: 768px) {
-    width: 230px;
+    width: 250px;
     left: ${(props) =>
       props.isOpen ? '0' : '-100%'}; /* Sidebar ocupa 100% no mobile */
   }
