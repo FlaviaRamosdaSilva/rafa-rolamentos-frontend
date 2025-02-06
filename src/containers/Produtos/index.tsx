@@ -82,7 +82,7 @@ export function Produtos() {
   }
 
   return (
-    <ContainerMe maxWidth="sm" sx={{ mt: 4 }}>
+    <ContainerMe sx={{ mt: 4 }}>
       <FormPaper elevation={3} sx={{ p: 4 }}>
         <FormTitle>Criar Produto</FormTitle>
         <form onSubmit={handleSubmit(onSubmit)}>

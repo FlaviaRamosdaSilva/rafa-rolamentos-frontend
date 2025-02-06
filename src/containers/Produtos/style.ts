@@ -10,8 +10,7 @@ export const ContainerMe = styled.div<StyledContainerProps>`
   display: flex;
   justify-content: center;
   //align-items: center;
-  min-height: calc(100vh - 130px);
-  width: 100vw; /* Subtraindo a largura do sidebar (280px) */
+  min-height: 100vh;
   background-color: #f4f4f4;
   padding: 0px;
 

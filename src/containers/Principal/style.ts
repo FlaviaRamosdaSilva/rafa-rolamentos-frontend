@@ -5,9 +5,10 @@ export const Container = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  height: calc(100vh - 130px);
-  width: calc(100vw - 280px); // Subtraindo a largura do sidebar (280px)
+  height: 100vh;
   margin-left: 280px; // Adicionando margem igual à largura do sidebar
+  padding-bottom: 80px;
+  padding-right: 0;
 
   @media (max-width: 768px) {
     margin-left: 0px;

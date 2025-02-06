@@ -13,6 +13,9 @@ export default createGlobalStyle`
     }
 
     body, html {
+        transform: scale(0.8);
+        transform-origin: top left;
+        width: 125%;
         margin: 0;
         padding: 0;
         -webkit-font-smoothing: antialiased;
