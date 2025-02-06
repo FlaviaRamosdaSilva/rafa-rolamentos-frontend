@@ -247,21 +247,14 @@ export function EditarProduto() {
               <TextField
                 label="Preço Lojista"
                 {...register('preco_lojista', {
-                  setValueAs: (value) =>
-                    value ? parseFloat(value.replace(',', '.')) || 0 : 0,
+                  setValueAs: (value) => value.replace(',', '.'),
                 })}
                 error={!!errors.preco_lojista}
                 helperText={errors.preco_lojista?.message}
                 type="text"
                 fullWidth
                 margin="normal"
-                value={
-                  valoresForm.preco_lojista !== undefined
-                    ? Number(valoresForm.preco_lojista)
-                        .toFixed(2)
-                        .replace('.', ',')
-                    : ''
-                }
+                value={valoresForm.preco_lojista}
               />
               <TextField
                 label="Preço Distribuidor"
@@ -273,11 +266,7 @@ export function EditarProduto() {
                 type="text"
                 fullWidth
                 margin="normal"
-                value={
-                  valoresForm.preco_distribuidor
-                    ? valoresForm.preco_distribuidor.toFixed(2)
-                    : ''
-                }
+                value={valoresForm.preco_distribuidor}
               />
               <Button
                 type="submit"
