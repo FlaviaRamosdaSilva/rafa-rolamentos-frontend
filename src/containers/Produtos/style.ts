@@ -37,7 +37,7 @@ export const FormPaper = styled(Paper)`
 
   @media (max-width: 768px) {
     margin-left: 0px;
-    height: 800px;
+    height: 910px;
     width: 100%;
     margin-top: 5px;
     margin-bottom: 80px;
