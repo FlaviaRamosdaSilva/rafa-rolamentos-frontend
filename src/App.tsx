@@ -10,7 +10,7 @@ function App() {
     if (
       location.pathname === '/login' ||
       location.pathname === '/esqueceu-senha' ||
-      location.pathname.startsWith('/users/reset-password/:recoverToken')
+      location.pathname.startsWith('/users/reset-password')
     ) {
       document.documentElement.style.setProperty('zoom', '1') // 100% para login e esqueceu a senha ou reset da senha
     } else {
